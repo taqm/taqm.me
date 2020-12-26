@@ -8,7 +8,7 @@ export type Post = {
 };
 
 export const loadPostFromMDX = (id: string) => {
-  const mdx = require(`../../posts/${id}`);
+  const mdx = require(`../../posts/${id}.mdx`);
   const meta: Meta = mdx.meta;
   const Component: () => JSX.Element = mdx.default;
   return {

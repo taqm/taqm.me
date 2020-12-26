@@ -1,7 +1,7 @@
 import { NextPage, GetStaticProps } from 'next';
 import Link from 'next/link';
 import * as React from 'react';
-import { Meta, Post } from '../src/domains/Post';
+import { loadPostFromMDX, Post } from '../src/domains/Post';
 import * as fs from 'fs';
 
 type Props = {
@@ -28,8 +28,8 @@ Index.displayName = 'pages/Index';
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const postPaths = await fs.promises.readdir('./posts');
   const postMetas = postPaths.map((fp) => {
-    const meta: Meta = require(`../posts/${fp}`).meta;
-    return { ...meta, id: fp };
+    const { post } = loadPostFromMDX(fp.replace('.mdx', ''));
+    return post;
   });
   return {
     props: {

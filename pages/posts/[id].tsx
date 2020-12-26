@@ -37,7 +37,7 @@ export const getStaticProps: GetStaticProps<Props, QueryParam> = async (
 export const getStaticPaths: GetStaticPaths<QueryParam> = async () => {
   const posts = await fs.promises.readdir('./posts');
   return {
-    paths: posts.map((s) => ({ params: { id: s } })),
+    paths: posts.map((fp) => ({ params: { id: fp.replace('.mdx', '') } })),
     fallback: false,
   };
 };
