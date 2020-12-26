@@ -1,11 +1,41 @@
-import { NextPage } from 'next';
+import { NextPage, GetStaticProps } from 'next';
+import Link from 'next/link';
 import * as React from 'react';
+import { Meta, Post } from '../src/domains/Post';
+import * as fs from 'fs';
 
-const Index: NextPage = () => {
-  return <h1>hello next</h1>
+type Props = {
+  posts: Post[];
+};
+
+const Index: NextPage<Props> = ({ posts }) => {
+  return (
+    <div>
+      <h1>index page</h1>
+      <ul>
+        {posts.map((post) => (
+          <li key={post.id}>
+            <Link href={'/posts/' + post.id}>{post.title}</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 Index.displayName = 'pages/Index';
 
-export default Index;
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const postPaths = await fs.promises.readdir('./posts');
+  const postMetas = postPaths.map((fp) => {
+    const meta: Meta = require(`../posts/${fp}`).meta;
+    return { ...meta, id: fp };
+  });
+  return {
+    props: {
+      posts: postMetas,
+    },
+  };
+};
 
+export default Index;
