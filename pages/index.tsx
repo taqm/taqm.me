@@ -3,6 +3,7 @@ import Link from 'next/link';
 import * as React from 'react';
 import { loadPostFromMDX, Post } from '../src/domains/Post';
 import * as fs from 'fs';
+import MyHeader from '../src/components/MyHeader';
 
 type Props = {
   posts: Post[];
@@ -11,6 +12,7 @@ type Props = {
 const Index: NextPage<Props> = ({ posts }) => {
   return (
     <div>
+      <MyHeader />
       <h1>index page</h1>
       <ul>
         {posts.map((post) => (
