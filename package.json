@@ -7,7 +7,6 @@
     "prebuild": "npm run clean",
     "build": "next build && next export",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
     "lint": "run-s lint:*",
     "lint:prettier":  "prettier -c src/** pages/**",
     "lint:eslint": "eslint --ext tsx --ext ts src/**/* pages/**/*",
