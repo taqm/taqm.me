@@ -1,8 +1,9 @@
-import * as React from 'react';
-import { NextPage, GetStaticPaths, GetStaticProps } from 'next';
-
 import * as fs from 'fs';
-import { loadPostFromMDX } from '../../src/domains/Post';
+
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import * as React from 'react';
+
+import { loadPostWithMDX } from '../../src/domains/Post';
 
 type Props = {
   id: string;
@@ -13,7 +14,7 @@ type QueryParam = {
 };
 
 const ShowPost: NextPage<Props> = ({ id }) => {
-  const { post, Component } = loadPostFromMDX(id);
+  const { post, Component } = loadPostWithMDX(id);
   return (
     <div>
       <div>{post.title}</div>
@@ -28,7 +29,10 @@ ShowPost.displayName = 'pages/posts/[slug]';
 export const getStaticProps: GetStaticProps<Props, QueryParam> = async (
   ctx,
 ) => {
-  const id = ctx.params?.id!;
+  if (ctx.params === undefined) {
+    return { notFound: true };
+  }
+  const { id } = ctx.params;
   return {
     props: { id },
   };

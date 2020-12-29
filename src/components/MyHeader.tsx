@@ -1,5 +1,5 @@
-import * as React from 'react';
 import Link from 'next/link';
+import * as React from 'react';
 
 type Props = {
   isTopPage?: boolean;
@@ -10,7 +10,7 @@ const MyHeader: React.VFC<Props> = ({ isTopPage }) => {
     <header className="border-b border-gray-200 bg-white">
       <Inner className="flex items-center justify-center h-16 text-2xl">
         <Link href="/" className="text-3xl">
-          taqm's blog
+          taqm&apos;blog
         </Link>
       </Inner>
     </header>
