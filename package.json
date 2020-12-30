@@ -8,7 +8,7 @@
     "build": "next build && next export",
     "storybook": "start-storybook -p 6006",
     "lint": "run-s lint:*",
-    "lint:prettier":  "prettier -c src/** pages/**",
+    "lint:prettier": "prettier -c src/** pages/**",
     "lint:eslint": "eslint --ext tsx --ext ts src/**/* pages/**/*",
     "format": "run-s format:*",
     "format:prettier": "prettier -w src/** pages/**",
