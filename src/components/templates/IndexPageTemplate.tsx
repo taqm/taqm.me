@@ -10,10 +10,10 @@ type Props = {
 
 const IndexPageTemplate: React.VFC<Props> = ({ posts }) => (
   <MainLayout headerProps={{ isTopPage: true }}>
-    <h2 className="font-bold text-2xl">記事一覧</h2>
+    <h2 className="font-bold text-2xl">Posts</h2>
     <ul className="flex flex-wrap py-4">
       {posts.map((post) => (
-        <li key={post.slug} className="w-full md:w-1/2 p-1">
+        <li key={post.slug} className="w-full border-b-2 px-2 py-4">
           <PostItem post={post} />
         </li>
       ))}
