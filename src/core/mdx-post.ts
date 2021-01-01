@@ -19,14 +19,22 @@ export const getAllPosts = async (): Promise<Post[]> => {
   return files.map<Post>((filename) => {
     const { data } = matter(`./posts/${filename}`);
     return {
-      slug: filename.replace('.mdx', ''),
+      slug: filename.replace(/.mdx?/, ''),
       ...pickMeta(data),
     };
   });
 };
 
 export const getPostWithContentBySlug = (slug: string): PostWithContent => {
-  const { data, content } = matter(`./posts/${slug}.mdx`);
+  const filepath = ['md', 'mdx']
+    .map((ext) => `./posts/${slug}.${ext}`)
+    .find((fp) => fs.existsSync(fp));
+
+  if (filepath === undefined) {
+    throw new Error(`対象のファイルが存在しません: ${slug}`);
+  }
+
+  const { data, content } = matter(filepath);
   return {
     slug,
     ...pickMeta(data),

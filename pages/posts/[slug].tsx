@@ -49,7 +49,7 @@ export const getStaticProps: GetStaticProps<Props, PathParams> = async (
 export const getStaticPaths: GetStaticPaths<PathParams> = async () => {
   const posts = await fs.promises.readdir('./posts');
   return {
-    paths: posts.map((fp) => ({ params: { slug: fp.replace('.mdx', '') } })),
+    paths: posts.map((fp) => ({ params: { slug: fp.replace(/.mdx?/, '') } })),
     fallback: false,
   };
 };
