@@ -5,10 +5,11 @@ import hydrate from 'next-mdx-remote/hydrate';
 import renderToString from 'next-mdx-remote/render-to-string';
 import * as React from 'react';
 
-import { getPostWithContentBySlug, Post } from '../../src/Post';
+import { getPostWithContentBySlug } from '../../src/core/mdx-post';
+import { deserializePost, SerializedPost, serializePost } from '../../src/Post';
 
 type Props = {
-  post: Post;
+  post: SerializedPost;
   source: any;
 };
 
@@ -16,7 +17,8 @@ type PathParams = {
   slug: string;
 };
 
-const ShowPost: NextPage<Props> = ({ post, source }) => {
+const ShowPost: NextPage<Props> = ({ post: serializedPost, source }) => {
+  const post = deserializePost(serializedPost);
   const content = hydrate(source, {});
   return (
     <div>
@@ -38,7 +40,7 @@ export const getStaticProps: GetStaticProps<Props, PathParams> = async (
   const { content, ...post } = getPostWithContentBySlug(ctx.params.slug);
   return {
     props: {
-      post,
+      post: serializePost(post),
       source: await renderToString(content),
     },
   };

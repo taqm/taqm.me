@@ -2,22 +2,27 @@ import { GetStaticProps, NextPage } from 'next';
 import * as React from 'react';
 
 import IndexPageTemplate from '../src/components/templates/IndexPageTemplate';
-import { getAllPosts, Post } from '../src/Post';
+import { getAllPosts } from '../src/core/mdx-post';
+import { deserializePost, SerializedPost, serializePost } from '../src/Post';
 
 type Props = {
-  posts: Post[];
+  post: SerializedPost[];
 };
 
-const Index: NextPage<Props> = ({ posts }) => (
-  <IndexPageTemplate posts={posts} />
-);
+const Index: NextPage<Props> = ({ post: serializedPosts }) => {
+  const posts = React.useMemo(() => serializedPosts.map(deserializePost), [
+    serializedPosts,
+  ]);
+  return <IndexPageTemplate posts={posts} />;
+};
 
 Index.displayName = 'pages/Index';
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const posts = await getAllPosts();
+  const serializedPosts = posts.map(serializePost);
   return {
-    props: { posts },
+    props: { post: serializedPosts },
   };
 };
 
