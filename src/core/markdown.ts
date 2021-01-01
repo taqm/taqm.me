@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import dayjs from 'dayjs';
 import { read as matter } from 'gray-matter';
 import rehypeStringify from 'rehype-stringify';
+import highlight from 'remark-highlight.js';
 import parse from 'remark-parse';
 import remark2rehype from 'remark-rehype';
 import unified from 'unified';
@@ -42,6 +43,7 @@ export const getPostWithContentBySlug = (slug: string): PostWithContent => {
 export const markdownToHtml = (text: string): string => {
   const ret = unified()
     .use(parse)
+    .use(highlight)
     .use(remark2rehype)
     .use(rehypeStringify)
     .processSync(text);

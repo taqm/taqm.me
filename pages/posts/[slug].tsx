@@ -8,6 +8,7 @@ import {
   markdownToHtml,
 } from '../../src/core/markdown';
 import { deserializePost, SerializedPost, serializePost } from '../../src/Post';
+import ShowPostPageTemplate from '../../src/components/templates/ShowPostPageTemplate';
 
 type Props = {
   post: SerializedPost;
@@ -20,14 +21,7 @@ type PathParams = {
 
 const ShowPost: NextPage<Props> = ({ post: serializedPost, content }) => {
   const post = deserializePost(serializedPost);
-  return (
-    <div>
-      <div>{post.title}</div>
-      <div>{post.slug}</div>
-      {/* eslint-disable-next-line react/no-danger */}
-      <div dangerouslySetInnerHTML={{ __html: content }} />
-    </div>
-  );
+  return <ShowPostPageTemplate post={post} content={content} />;
 };
 
 ShowPost.displayName = 'pages/posts/[slug]';
