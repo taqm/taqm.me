@@ -56,7 +56,7 @@ jobs:
           path: dist
 
       - name: Print dist files.
-        run: ls -la
+        run: ls -la dist
 
       - name: Push to product branch
         uses: peaceiris/actions-gh-pages@v3
