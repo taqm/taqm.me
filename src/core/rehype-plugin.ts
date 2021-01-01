@@ -4,13 +4,14 @@ import visit, { Visitor } from 'unist-util-visit';
 export const appendCodeFilename: unified.Plugin = () => {
   /* eslint-disable no-param-reassign */
   const visitor: Visitor<HastNode> = (node, _, parent) => {
+    if (!parent) return;
     if (node.type !== 'element') return;
     const filename = node.properties['data-filename'];
     if (node.tagName !== 'pre' || !filename) {
       return;
     }
 
-    node!.properties.className = [
+    node.properties.className = [
       node.properties.className,
       'm-0',
       'mt-2',
@@ -26,7 +27,7 @@ export const appendCodeFilename: unified.Plugin = () => {
       className: 'relative',
     };
 
-    parent!.children = [
+    parent.children = [
       {
         type: 'element',
         tagName: 'div',
@@ -35,7 +36,7 @@ export const appendCodeFilename: unified.Plugin = () => {
         },
         children: [{ type: 'text', value: filename }],
       },
-      ...parent!.children,
+      ...parent.children,
     ];
     delete node.properties['data-filename'];
   };
