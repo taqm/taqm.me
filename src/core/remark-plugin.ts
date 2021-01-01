@@ -6,11 +6,11 @@ import visit, { Visitor } from 'unist-util-visit';
 export const addFilenameToProperties: unified.Plugin = () => {
   const visitor: Visitor<MDastCodeNode> = (node) => {
     const [lang, filename] = node.lang?.split(':') ?? [];
+    if (!filename) return;
     if (!node.data) {
       node.data = {};
     }
-    node.data.hProperties = { filename };
-    node.lang = lang ?? 'text';
+    node.lang = `${lang ?? 'text'}[data-filename=${filename}]`;
   };
   return (node) => visit(node, 'code', visitor);
 };

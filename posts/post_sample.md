@@ -23,7 +23,7 @@ publishedAt: 2021-01-01 10:00
 |c | d|
 |e | f|
 
-```ts:test.ts
+```ts:hoge.ts
 const message = 'コードブロック';
 ```
 

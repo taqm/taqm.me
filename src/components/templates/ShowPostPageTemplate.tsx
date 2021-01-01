@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Post } from '../../Post';
 import MainLayout from '../MainLayout';
 
-import 'highlight.js/styles/default.css';
+import 'prismjs/themes/prism-okaidia.css';
 
 type Props = {
   post: Post;

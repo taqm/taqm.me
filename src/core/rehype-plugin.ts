@@ -3,46 +3,41 @@ import visit, { Visitor } from 'unist-util-visit';
 
 export const appendCodeFilename: unified.Plugin = () => {
   /* eslint-disable no-param-reassign */
-  const visitor: Visitor<HastNode> = (node) => {
-    if (node.type !== 'element') {
+  const visitor: Visitor<HastNode> = (node, _, parent) => {
+    if (node.type !== 'element') return;
+    const filename = node.properties['data-filename'];
+    if (node.tagName !== 'pre' || !filename) {
       return;
     }
 
-    if (node.tagName !== 'pre') {
-      return;
-    }
+    node!.properties.className = [
+      node.properties.className,
+      'm-0',
+      'mt-2',
+      'pt-8',
+    ];
 
     const code = node?.children?.[0];
-    if (!code) return;
-    if (code.type !== 'element' || code.tagName !== 'code') return;
-    if (!code.properties.filename) return;
-
-    if (!code.properties.className) {
-      code.properties.className = [];
+    if (code?.type === 'element') {
+      code.properties.className = [code.properties.className, 'pt-6'];
     }
-    code.properties.className.push = ['pt-6'];
 
-    const tmp = { ...node };
-    const newNode: HastNode = {
-      type: 'element',
-      tagName: 'div',
-      properties: {
-        className: 'relative py-1',
-      },
-      children: [
-        {
-          type: 'element',
-          tagName: 'div',
-          properties: {
-            className: 'absolute -left-1 top-0 bg-gray-300 px-2',
-          },
-          children: [{ type: 'text', value: code.properties.filename }],
-        },
-        tmp,
-      ],
+    (parent as HastElementNode).properties = {
+      className: 'relative',
     };
-    Object.assign(node, newNode);
-    delete code.properties.filename;
+
+    parent!.children = [
+      {
+        type: 'element',
+        tagName: 'div',
+        properties: {
+          className: 'absolute -left-1 -top-1 bg-gray-300 px-2',
+        },
+        children: [{ type: 'text', value: filename }],
+      },
+      ...parent!.children,
+    ];
+    delete node.properties['data-filename'];
   };
 
   return (node) => {

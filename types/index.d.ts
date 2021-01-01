@@ -1,3 +1,3 @@
-declare module 'remark-highlight.js' {
+declare module 'remark-prism' {
   export default any;
 }
