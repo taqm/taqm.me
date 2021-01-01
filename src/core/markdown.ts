@@ -9,7 +9,7 @@ import remark2rehype from 'remark-rehype';
 import unified from 'unified';
 
 import { Meta, Post } from '../Post';
-import { appendCodeFilename } from './rehype-plugin';
+import { appendCodeFilename, styling } from './rehype-plugin';
 import { addFilenameToProperties, headingLevelDown } from './remark-plugin';
 
 export type PostWithContent = Post & {
@@ -49,8 +49,9 @@ export const markdownToHtml = (text: string): string => {
     .use(remarkPrism)
     .use(headingLevelDown)
     .use(remark2rehype)
-    .use(rehypeStringify)
     .use(appendCodeFilename)
+    .use(styling)
+    .use(rehypeStringify)
     .processSync(text);
   return String(ret);
 };

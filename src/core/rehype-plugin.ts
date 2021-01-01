@@ -1,5 +1,26 @@
+/* eslint-disable no-param-reassign */
+
 import unified from 'unified';
 import visit, { Visitor } from 'unist-util-visit';
+
+export const styling: unified.Plugin = () => {
+  const visitor: Visitor<HastElementNode> = (node) => {
+    const classes: Record<string, string> = {
+      h2: 'text-2xl mt-4 font-bold',
+      h3: 'text-xl mt-2 font-bold',
+      h4: 'text-xl mt-2 font-bold',
+      p: 'mt-2',
+    };
+
+    const className = classes[node.tagName];
+    if (className) {
+      node.properties.className = className;
+    }
+  };
+  return (node) => {
+    visit(node, 'element', visitor);
+  };
+};
 
 export const appendCodeFilename: unified.Plugin = () => {
   /* eslint-disable no-param-reassign */
