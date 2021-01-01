@@ -15,18 +15,19 @@
     "format:eslint": "eslint --ext tsx --ext ts --fix src/**/* pages/**/*"
   },
   "dependencies": {
-    "@mdx-js/loader": "^1.6.22",
-    "@next/mdx": "^10.0.4",
     "@tailwindcss/postcss7-compat": "^2.0.2",
     "autoprefixer": "^9.8.6",
     "dayjs": "^1.9.8",
     "gray-matter": "^4.0.2",
     "next": "^10.0.4",
-    "next-mdx-remote": "^2.0.1",
     "postcss": "^7.0.32",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2"
+    "rehype-stringify": "^8.0.0",
+    "remark-parse": "^9.0.0",
+    "remark-rehype": "^8.0.0",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
+    "unified": "^9.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

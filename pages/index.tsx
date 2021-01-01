@@ -2,7 +2,7 @@ import { GetStaticProps, NextPage } from 'next';
 import * as React from 'react';
 
 import IndexPageTemplate from '../src/components/templates/IndexPageTemplate';
-import { getAllPosts } from '../src/core/mdx-post';
+import { getAllPosts } from '../src/core/markdown';
 import { deserializePost, SerializedPost, serializePost } from '../src/Post';
 
 type Props = {

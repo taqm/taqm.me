@@ -1,30 +1,31 @@
 import * as fs from 'fs';
 
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import hydrate from 'next-mdx-remote/hydrate';
-import renderToString from 'next-mdx-remote/render-to-string';
 import * as React from 'react';
 
-import { getPostWithContentBySlug } from '../../src/core/mdx-post';
+import {
+  getPostWithContentBySlug,
+  markdownToHtml,
+} from '../../src/core/markdown';
 import { deserializePost, SerializedPost, serializePost } from '../../src/Post';
 
 type Props = {
   post: SerializedPost;
-  source: unknown;
+  content: string;
 };
 
 type PathParams = {
   slug: string;
 };
 
-const ShowPost: NextPage<Props> = ({ post: serializedPost, source }) => {
+const ShowPost: NextPage<Props> = ({ post: serializedPost, content }) => {
   const post = deserializePost(serializedPost);
-  const content = hydrate(source, {});
   return (
     <div>
       <div>{post.title}</div>
       <div>{post.slug}</div>
-      {content}
+      {/* eslint-disable-next-line react/no-danger */}
+      <div dangerouslySetInnerHTML={{ __html: content }} />
     </div>
   );
 };
@@ -41,7 +42,7 @@ export const getStaticProps: GetStaticProps<Props, PathParams> = async (
   return {
     props: {
       post: serializePost(post),
-      source: await renderToString(content),
+      content: markdownToHtml(content),
     },
   };
 };
@@ -49,7 +50,7 @@ export const getStaticProps: GetStaticProps<Props, PathParams> = async (
 export const getStaticPaths: GetStaticPaths<PathParams> = async () => {
   const posts = await fs.promises.readdir('./posts');
   return {
-    paths: posts.map((fp) => ({ params: { slug: fp.replace(/.mdx?/, '') } })),
+    paths: posts.map((fp) => ({ params: { slug: fp.replace(/.md/, '') } })),
     fallback: false,
   };
 };

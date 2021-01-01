@@ -2,6 +2,10 @@ import * as fs from 'fs';
 
 import dayjs from 'dayjs';
 import { read as matter } from 'gray-matter';
+import rehypeStringify from 'rehype-stringify';
+import parse from 'remark-parse';
+import remark2rehype from 'remark-rehype';
+import unified from 'unified';
 
 import { Meta, Post } from '../Post';
 
@@ -19,25 +23,27 @@ export const getAllPosts = async (): Promise<Post[]> => {
   return files.map<Post>((filename) => {
     const { data } = matter(`./posts/${filename}`);
     return {
-      slug: filename.replace(/.mdx?/, ''),
+      slug: filename.replace(/.md/, ''),
       ...pickMeta(data),
     };
   });
 };
 
 export const getPostWithContentBySlug = (slug: string): PostWithContent => {
-  const filepath = ['md', 'mdx']
-    .map((ext) => `./posts/${slug}.${ext}`)
-    .find((fp) => fs.existsSync(fp));
-
-  if (filepath === undefined) {
-    throw new Error(`対象のファイルが存在しません: ${slug}`);
-  }
-
-  const { data, content } = matter(filepath);
+  const fp = `./posts/${slug}.md`;
+  const { data, content } = matter(fp);
   return {
     slug,
     ...pickMeta(data),
     content,
   };
+};
+
+export const markdownToHtml = (text: string): string => {
+  const ret = unified()
+    .use(parse)
+    .use(remark2rehype)
+    .use(rehypeStringify)
+    .processSync(text);
+  return String(ret);
 };
