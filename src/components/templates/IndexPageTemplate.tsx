@@ -2,26 +2,27 @@ import Link from 'next/link';
 import * as React from 'react';
 
 import { Post } from '../../Post';
-import MyHeader from '../MyHeader';
+import MainLayout from '../MainLayout';
 
 type Props = {
   posts: Post[];
 };
 
 const IndexPageTemplate: React.VFC<Props> = ({ posts }) => (
-  <>
-    <MyHeader isTopPage />
-    <main>
-      <h2>記事一覧</h2>
-      <ul className="flex">
-        {posts.map((post) => (
-          <li key={post.slug}>
-            <Link href={`/posts/${post.slug}`}>{post.title}</Link>
-          </li>
-        ))}
-      </ul>
-    </main>
-  </>
+  <MainLayout headerProps={{ isTopPage: true }}>
+    <h2 className="font-bold text-2xl">記事一覧</h2>
+    <ul className="flex flex-wrap py-4">
+      {posts.map((post) => (
+        <li key={post.slug} className="md:w-1/2 w-full p-1">
+          <Link href={`/posts/${post.slug}`}>
+            <a className="border-gray-200 border p-3 w-full flex">
+              {post.title}
+            </a>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </MainLayout>
 );
 
 IndexPageTemplate.displayName = 'components/templates/IndexPageTemplate';
