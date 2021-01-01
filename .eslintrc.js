@@ -20,6 +20,7 @@ module.exports = {
       'error',
       { ignoreCase: true, ignoreDeclarationSort: true },
     ],
+    'import/prefer-default-export': 'off',
     'import/order': [
       'error',
       {

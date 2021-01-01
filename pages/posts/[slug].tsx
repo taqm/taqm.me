@@ -3,12 +3,12 @@ import * as fs from 'fs';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import * as React from 'react';
 
+import ShowPostPageTemplate from '../../src/components/templates/ShowPostPageTemplate';
 import {
   getPostWithContentBySlug,
   markdownToHtml,
 } from '../../src/core/markdown';
 import { deserializePost, SerializedPost, serializePost } from '../../src/Post';
-import ShowPostPageTemplate from '../../src/components/templates/ShowPostPageTemplate';
 
 type Props = {
   post: SerializedPost;

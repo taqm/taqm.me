@@ -9,6 +9,8 @@ import remark2rehype from 'remark-rehype';
 import unified from 'unified';
 
 import { Meta, Post } from '../Post';
+import { appendCodeFilename } from './rehype-plugin';
+import { addFilenameToProperties, headingLevelDown } from './remark-plugin';
 
 export type PostWithContent = Post & {
   content: string;
@@ -43,9 +45,12 @@ export const getPostWithContentBySlug = (slug: string): PostWithContent => {
 export const markdownToHtml = (text: string): string => {
   const ret = unified()
     .use(parse)
+    .use(addFilenameToProperties)
     .use(highlight)
+    .use(headingLevelDown)
     .use(remark2rehype)
     .use(rehypeStringify)
+    .use(appendCodeFilename)
     .processSync(text);
   return String(ret);
 };

@@ -29,7 +29,8 @@
     "remark-parse": "^9.0.0",
     "remark-rehype": "^8.0.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
-    "unified": "^9.2.0"
+    "unified": "^9.2.0",
+    "unist-util-visit": "^2.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
