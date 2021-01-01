@@ -23,13 +23,17 @@ const pickMeta = (data: Record<string, string>): Meta => ({
 
 export const getAllPosts = async (): Promise<Post[]> => {
   const files = await fs.promises.readdir('./posts');
-  return files.map<Post>((filename) => {
+  const posts = files.map<Post>((filename) => {
     const { data } = matter(`./posts/${filename}`);
     return {
       slug: filename.replace(/.md/, ''),
       ...pickMeta(data),
     };
   });
+  posts.sort((lhs, rhs) =>
+    lhs.publishedAt.isBefore(rhs.publishedAt) ? 1 : -1,
+  );
+  return posts;
 };
 
 export const getPostWithContentBySlug = (slug: string): PostWithContent => {
