@@ -10,7 +10,7 @@ import { deserializePost, SerializedPost, serializePost } from '../../src/Post';
 
 type Props = {
   post: SerializedPost;
-  source: any;
+  source: unknown;
 };
 
 type PathParams = {

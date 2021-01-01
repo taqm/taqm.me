@@ -9,7 +9,7 @@ export type PostWithContent = Post & {
   content: string;
 };
 
-const pickMeta = (data: any): Meta => ({
+const pickMeta = (data: Record<string, string>): Meta => ({
   title: data.title,
   publishedAt: dayjs(data.publishedAt),
 });
