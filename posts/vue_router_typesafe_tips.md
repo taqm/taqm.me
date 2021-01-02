@@ -1,6 +1,9 @@
 ---
 title: "vue-routerを無理やりTypeScriptで型安全にする"
 publishedAt: "2018-11-07T14:13:53+09:00"
+tags:
+  - Vue
+  - TypeScript
 ---
 
 vue-routerをTypeScriptで使うと
@@ -178,7 +181,7 @@ declare module 'vue-router/types/router' {
 この定義で`VueRouter`の型定義へメソッドを追加します。
 メソッド名は`pushTo`としており
 
-- 第１引数は 遷移先 
+- 第１引数は 遷移先
 - 第２引数は 遷移先が求めるパラメータ
 
 となります。

@@ -1,6 +1,9 @@
 ---
 title: "@types/react の中を少し読んでみる"
 publishedAt: "2019-12-14T08:32:19+09:00"
+tags:
+  - React
+  - TypeScript
 ---
 
 # 注意
@@ -37,7 +40,7 @@ Warning: all of these interfaces are empty. If you want type definitions for var
 */
 ```
 
-適当に訳すと  
+適当に訳すと
 「これらの定義を用意することで`lib.dom`を読み込まなくてもコンパイルできるようになります」
 「ただし、空の定義なのでプロパティなどにアクセスしたいのならちゃんと読み込んでね」
 ってことみたいです。
@@ -113,7 +116,7 @@ class Child extends React.Component<Props, State> {
 こうすることで `this.context` が型安全に利用することができます。
 
 #### 注記
-React 16.3より前から存在する`Legacy Context`についても同様に`this.context`を利用していました。 
+React 16.3より前から存在する`Legacy Context`についても同様に`this.context`を利用していました。
 その場合は`contextType`の定義はせず`any`のまま利用するほうが良いかと思います。
 
 ### React.ComponentClass
@@ -327,6 +330,6 @@ type DivProps = DOMProps<'div'>;
 Reactなど関数的な考え方を持ち込んでいるライブラリは型定義が面白かったりと勉強になるので
 皆さんもぜひ読んでみてはいかがでしょうか。
 
---- 
+---
 
 おしまい

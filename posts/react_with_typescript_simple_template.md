@@ -1,6 +1,9 @@
 ---
 title: "React & TypeScript をシンプルに始める(create-react-appなし)"
 publishedAt: "2018-09-21T18:10:39+09:00"
+tags:
+  - TypeScript
+  - React
 ---
 
 

@@ -1,6 +1,9 @@
 ---
 title: "Docker(Compose)を使ったローカル開発用MySQLの準備"
 publishedAt: "2018-09-10T09:45:48+09:00"
+tags:
+  - MySQL
+  - Docker
 ---
 
 忘れないようにメモ
@@ -75,7 +78,7 @@ services:
 本当に必要最小限の設定ですね＾＾
 
 ### volumes
-マウントするボリュームです。  
+マウントするボリュームです。
 
 #### docker-entrypoint-initdb.d
 mysqlのイメージは`/docker-entrypoint-initdb.d`配下のファイルを実行してくれます。
@@ -115,7 +118,7 @@ $ docker-compose exec db mysql
 
 ```
 
-これでmysqlへ接続できるはずです！  
+これでmysqlへ接続できるはずです！
 ２つめのコマンドは、「dbコンテナで`mysql`コマンドを実行する」ということになります。
 この設定ではrootパスワードを設定していないので`mysql`だけでも接続できています。
 

@@ -1,6 +1,8 @@
 ---
 title: "TypeScriptの keyof を特定の型でフィルタする"
 publishedAt: "2018-04-26T11:16:00+09:00"
+tags:
+  - TypeScript
 ---
 
 TypeScriptで少しハマったのでメモ

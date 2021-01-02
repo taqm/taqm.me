@@ -1,9 +1,11 @@
 ---
 title: "Go言語のtext/templateでNewするときの名前について"
 publishedAt: "2018-09-10T09:34:00+09:00"
+tags:
+  - Golang
 ---
 
-Go言語の標準パッケージである`text/template`について  
+Go言語の標準パッケージである`text/template`について
 けっこうハマってしまったのでメモとして残します。
 
 # .ParseFilesを利用する場合の、template.Newの引数
@@ -36,8 +38,8 @@ test.txtを読み込んで、"taqm"というパラメータを渡して標準出
 
 > panic: template: "mytemplate" is an incomplete or empty template
 
-なんか怒られた... 
-こういうときはじっくりエラー文言を呼んでみることが重要！  
+なんか怒られた...
+こういうときはじっくりエラー文言を呼んでみることが重要！
 
 > "mytemplate"は不完全または空のテンプレートです [by Google翻訳]
 
@@ -50,7 +52,7 @@ test.txtを読み込んで、"taqm"というパラメータを渡して標準出
 調べていると[ある記事](https://qiita.com/akiraak/items/aa259b3988e00c2a3820)に答えはありました。
 
 `template.New`の後ろで`ParseFiles`を呼ぶ場合は、
-`ParseFiles`の引数に設定するファイルパスの**ファイル名**を設定する必要があるらしい！  
+`ParseFiles`の引数に設定するファイルパスの**ファイル名**を設定する必要があるらしい！
 
 ```go
 t := tmpl.Must(tmpl.New("mytemplate").ParseFiles("test.txt"))

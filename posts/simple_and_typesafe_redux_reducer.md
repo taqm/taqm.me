@@ -1,6 +1,9 @@
 ---
 title: "TypeScriptで Redux の Reducer部分を型安全かつスッキリ書く"
 publishedAt: "2018-05-08T15:17:14+09:00"
+tags:
+  - Redux
+  - TypeScript
 ---
 
 # はじめに
@@ -31,7 +34,7 @@ type Actions = (
   | ReturnType<typeof setCount>
 );
 
-interface AppState {} // 本記事の趣旨に関係ないため割愛 
+interface AppState {} // 本記事の趣旨に関係ないため割愛
 const initialState: AppState = {};
 
 export default function reducer(

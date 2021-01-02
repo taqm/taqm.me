@@ -1,6 +1,8 @@
 ---
 title: "TypeScriptでFunction.bindを使うのはよくない"
 publishedAt: "2018-10-02T15:05:33+09:00"
+tags:
+  - TypeScript
 ---
 
 
@@ -41,7 +43,7 @@ TypeScriptのクラスとしてデフォルトのプロトタイプメソッド�
 ```typescript
 class MyClass {
     private status = "blah";
-    
+
     public run = () => { // <-- note syntax here
         alert(this.status);
     }

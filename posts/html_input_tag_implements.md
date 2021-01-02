@@ -1,6 +1,8 @@
 ---
 title: "HTMLのinputタグ[type=file]のブラウザごとの挙動について調べてみた"
 publishedAt: "2018-12-25T08:44:11+09:00"
+tags:
+  - HTML
 ---
 
 # はじめに

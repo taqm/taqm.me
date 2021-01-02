@@ -1,6 +1,9 @@
 ---
 title: "TypeScriptでVuexを型安全に扱うライブラリを作りました"
 publishedAt: "2018-10-14T10:31:27+09:00"
+tags:
+  - Vue
+  - TypeScript
 ---
 
 # はじめに
@@ -77,18 +80,18 @@ class Sample extends Vue {
 
 ```typescript
 import { namespace } from 'vuex-map-decorators';
- 
+
 interface SampleState {
   count: number;
 }
 const state: SampleState = {
   count: 0,
 };
- 
+
 const mutations = { ... };
 const getters = { ... };
 const actions = { ... };
- 
+
 export const ns = namespace<
   SampleState,
   typeof mutations,
@@ -210,7 +213,7 @@ type VuexMapper = (
 function createVuexDecorator(
   bindTo: 'computed' | 'methods',
   mapper: VuexMapper,
-) 
+)
 ```
 どこに何でマッピングするかを定義します。
 `State`の場合は「computedにmapState」でマッピングを行なっています。

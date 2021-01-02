@@ -1,6 +1,8 @@
 ---
 title: "JavaScriptで演算子オーバーロードしてみる(BabelでAST)"
 publishedAt: "2019-12-08T11:18:34+09:00"
+tags:
+  - JavaScript
 ---
 
 # はじめに
@@ -32,7 +34,7 @@ publishしました！
 ```js
 opol: {
   const puts = { '<<': console.log };
-  puts << 'hello world'; 
+  puts << 'hello world';
   // => hello world
 
   class Hoge {
@@ -208,7 +210,7 @@ ESLintや型の解決が一切行われないので
 そして、今回はbabel経由でASTの操作を行いました。
 ASTを扱うのはハードルが高いように感じますがとても簡単なのでぜひ皆さんも触ってみてください。
 
---- 
+---
 おしまい
 
 # 参考サイト
