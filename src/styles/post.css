@@ -27,12 +27,12 @@
   @apply mt-6 leading-7;
 }
 
-.post-page .pre {
-  @apply m-0 mt-2 pt-8;
-}
-
 .post-page .has-filename {
   @apply relative;
+}
+
+.post-page .has-filename .pre {
+  @apply m-0 mt-2 pt-8;
 }
 
 .post-page .has-filename .code {
