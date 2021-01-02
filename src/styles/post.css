@@ -8,7 +8,7 @@
 }
 
 .post-page .heading.lv-2 {
-  @apply text-2xl font-bold;
+  @apply text-xl font-bold border-b-2;
 }
 
 .post-page .heading.lv-3 {
@@ -16,7 +16,7 @@
 }
 
 .post-page .heading.lv-4 {
-  @apply text-xl font-bold;
+  @apply font-bold;
 }
 
 .post-page .heading.lv-5 {
@@ -24,7 +24,7 @@
 }
 
 .post-page .paragraph {
-  @apply mt-6 leading-7;
+  @apply mt-6 leading-7 break-words;
 }
 
 .post-page .has-filename {
@@ -32,7 +32,7 @@
 }
 
 .post-page .has-filename .pre {
-  @apply m-0 mt-2 pt-8;
+  @apply m-0 mt-4 pt-4;
 }
 
 .post-page .has-filename .code {
@@ -40,5 +40,5 @@
 }
 
 .post-page .filename {
-  @apply absolute -left-1 -top-1 bg-gray-300 px-2;
+  @apply absolute -left-1 -top-2 bg-gray-300 px-2 text-sm;
 }

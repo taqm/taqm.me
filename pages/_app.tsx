@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import 'tailwindcss/tailwind.css';
 import 'prismjs/themes/prism-okaidia.css';
+import '../src/styles/global.css';
 import '../src/styles/post.css';
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => (

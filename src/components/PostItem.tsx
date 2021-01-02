@@ -28,7 +28,7 @@ const PostItem: React.VFC<Props> = ({ post }) => (
         {post.tags?.map((tag) => (
           <li key={tag} className="mr-2 bg-gray-200 hover:bg-gray-300">
             <Link href={`/tags/${tag}`} prefetch={false}>
-              <a className="px-2 text-sm">{tag}</a>
+              <a className="block px-2 h-full text-sm">{tag}</a>
             </Link>
           </li>
         ))}

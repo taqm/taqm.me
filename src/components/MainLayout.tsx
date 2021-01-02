@@ -9,7 +9,7 @@ type Props = {
 const MainLayout: React.FC<Props> = ({ headerProps, children }) => (
   <>
     <MyHeader {...headerProps} />
-    <main className="max-w-screen-md mx-auto py-4">{children}</main>
+    <main className="container py-4">{children}</main>
   </>
 );
 

@@ -11,7 +11,7 @@ type Props = {
 const ShowPostPageTemplate: React.VFC<Props> = ({ post, content }) => (
   <MainLayout>
     <article className="post-page">
-      <h1 className="text-3xl font-bold">{post.title}</h1>
+      <h1 className="text-2xl font-bold">{post.title}</h1>
       {/* eslint-disable-next-line react/no-danger */}
       <div dangerouslySetInnerHTML={{ __html: content }} />
     </article>

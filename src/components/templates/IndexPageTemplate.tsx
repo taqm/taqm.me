@@ -16,7 +16,7 @@ const IndexPageTemplate: React.VFC<Props> = ({ posts }) => (
       }
     `}</style>
     <MainLayout headerProps={{ isTopPage: true }}>
-      <h2 className="font-bold text-center text-2xl">Posts</h2>
+      <h2 className="font-bold sm:text-center text-2xl">Posts</h2>
       <ul className="flex flex-wrap">
         {posts.map((post) => (
           <li key={post.slug} className="post-item w-full border-b-2 px-2 py-4">
