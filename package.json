@@ -8,11 +8,11 @@
     "build": "next build && next export",
     "storybook": "start-storybook -p 6006",
     "lint": "run-s lint:*",
-    "lint:prettier": "prettier -c src/** pages/**",
-    "lint:eslint": "eslint --ext tsx --ext ts src/**/* pages/**/*",
+    "lint:prettier": "prettier -c src pages/**",
+    "lint:eslint": "eslint --ext .ts,.tsx src pages",
     "format": "run-s format:*",
     "format:prettier": "prettier -w src/** pages/**",
-    "format:eslint": "eslint --ext tsx --ext ts --fix src/**/* pages/**/*"
+    "format:eslint": "eslint --ext .ts,.tsx --fix src pages"
   },
   "dependencies": {
     "@tailwindcss/postcss7-compat": "^2.0.2",
