@@ -3,8 +3,6 @@ import * as React from 'react';
 import { Post } from '../../Post';
 import MainLayout from '../MainLayout';
 
-import 'prismjs/themes/prism-okaidia.css';
-
 type Props = {
   post: Post;
   content: string;
@@ -12,7 +10,7 @@ type Props = {
 
 const ShowPostPageTemplate: React.VFC<Props> = ({ post, content }) => (
   <MainLayout>
-    <article>
+    <article className="post-page">
       <h1 className="text-3xl font-bold">{post.title}</h1>
       {/* eslint-disable-next-line react/no-danger */}
       <div dangerouslySetInnerHTML={{ __html: content }} />

@@ -1,0 +1,44 @@
+.post-page .heading {
+  @apply mt-6;
+}
+
+.post-page .heading + .paragraph,
+.post-page .heading + div {
+  @apply mt-2;
+}
+
+.post-page .heading.lv-2 {
+  @apply text-2xl font-bold;
+}
+
+.post-page .heading.lv-3 {
+  @apply text-xl font-bold;
+}
+
+.post-page .heading.lv-4 {
+  @apply text-xl font-bold;
+}
+
+.post-page .heading.lv-5 {
+  @apply font-bold;
+}
+
+.post-page .paragraph {
+  @apply mt-6 leading-7;
+}
+
+.post-page .pre {
+  @apply m-0 mt-2 pt-8;
+}
+
+.post-page .has-filename {
+  @apply relative;
+}
+
+.post-page .has-filename .code {
+  @apply pt-6;
+}
+
+.post-page .filename {
+  @apply absolute -left-1 -top-1 bg-gray-300 px-2;
+}
