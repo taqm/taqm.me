@@ -14,16 +14,25 @@ const PostItem: React.VFC<Props> = ({ post }) => (
       .link:hover {
         text-decoration: underline;
         text-decoration-color: black;
-        text-underline-offset: 2px;
+        text-underline-offset: 4px;
       }
     `}</style>
     <article>
       <div className="text-sm text-gray-500">
         {post.publishedAt.format('YYYY-MM-DD')}
       </div>
-      <Link href={`/posts/${post.slug}`}>
-        <a className="link text-xl">{post.title}</a>
+      <Link href={`/posts/${post.slug}`} prefetch={false}>
+        <a className="link text-xl mt-2">{post.title}</a>
       </Link>
+      <ul className="flex flex-wrap mt-2">
+        {post.tags?.map((tag) => (
+          <li key={tag} className="mr-2 bg-gray-200 hover:bg-gray-300">
+            <Link href={`/tags/${tag}`} prefetch={false}>
+              <a className="px-2 text-sm">{tag}</a>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </article>
   </>
 );

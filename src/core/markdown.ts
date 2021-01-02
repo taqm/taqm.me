@@ -12,13 +12,20 @@ import { Meta, Post } from '../Post';
 import { appendCodeFilename, styling } from './rehype-plugin';
 import { addFilenameToProperties, headingLevelDown } from './remark-plugin';
 
+type RawMeta = {
+  title: string;
+  publishedAt: string;
+  tags: string[];
+};
+
 export type PostWithContent = Post & {
   content: string;
 };
 
-const pickMeta = (data: Record<string, string>): Meta => ({
+const pickMeta = (data: RawMeta): Meta => ({
   title: data.title,
   publishedAt: dayjs(data.publishedAt),
+  tags: data.tags,
 });
 
 export const getAllPosts = async (): Promise<Post[]> => {
@@ -27,7 +34,7 @@ export const getAllPosts = async (): Promise<Post[]> => {
     const { data } = matter(`./posts/${filename}`);
     return {
       slug: filename.replace(/.md/, ''),
-      ...pickMeta(data),
+      ...pickMeta(data as RawMeta),
     };
   });
   posts.sort((lhs, rhs) =>
@@ -41,7 +48,7 @@ export const getPostWithContentBySlug = (slug: string): PostWithContent => {
   const { data, content } = matter(fp);
   return {
     slug,
-    ...pickMeta(data),
+    ...pickMeta(data as RawMeta),
     content,
   };
 };

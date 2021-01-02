@@ -3,12 +3,14 @@ import dayjs, { Dayjs } from 'dayjs';
 export type Meta = {
   title: string;
   publishedAt: Dayjs;
+  tags: string[];
 };
 
 export type Post = {
   slug: string;
   title: string;
   publishedAt: Dayjs;
+  tags: string[];
 };
 
 export type SerializedPost = {
