@@ -1,10 +1,16 @@
 import { AppProps } from 'next/app';
+import Head from 'next/head';
 import * as React from 'react';
 
 import 'tailwindcss/tailwind.css';
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => (
-  <Component {...pageProps} />
+  <>
+    <Head>
+      <meta name="robots" content="nofollow noindex" />
+    </Head>
+    <Component {...pageProps} />
+  </>
 );
 
 export default App;
