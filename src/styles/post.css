@@ -27,6 +27,10 @@
   @apply mt-6 leading-7 break-words;
 }
 
+.post-page .list {
+  @apply mt-6 list-inside list-disc;
+}
+
 .post-page .has-filename {
   @apply relative;
 }
