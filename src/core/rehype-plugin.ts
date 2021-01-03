@@ -14,7 +14,14 @@ export const styling: unified.Plugin = () => {
       pre: 'pre',
       code: 'code',
       a: 'anchor',
-      ul: 'list',
+      ul: 'list unordered',
+      ol: 'list ordered',
+      table: 'table',
+      thead: 'thead',
+      tbody: 'tbody',
+      tr: 'tr',
+      td: 'td',
+      th: 'th',
     };
 
     const className = classes[node.tagName];

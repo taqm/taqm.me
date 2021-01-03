@@ -3,6 +3,8 @@
 }
 
 .post-page .heading + .paragraph,
+.post-page .heading + .table,
+.post-page .heading + .pre,
 .post-page .heading + div {
   @apply mt-2;
 }
@@ -28,11 +30,26 @@
 }
 
 .post-page .list {
-  @apply mt-6 list-inside list-disc;
+  @apply mt-6 list-inside;
+}
+
+.post-page .list .list {
+  @apply ml-4 mt-2;
+}
+.post-page .list li {
+  @apply mt-2;
+}
+
+.post-page .list.ordered {
+  @apply list-decimal;
+}
+
+.post-page .list.unordered {
+  @apply list-disc;
 }
 
 .post-page .has-filename {
-  @apply relative;
+  @apply relative mt-6;
 }
 
 .post-page .has-filename .pre {
@@ -45,4 +62,24 @@
 
 .post-page .filename {
   @apply absolute -left-1 -top-2 bg-gray-300 px-2 text-sm;
+}
+
+.post-page .table {
+  @apply border-2 mt-6;
+}
+
+.post-page .tbody .tr:nth-child(odd) {
+  @apply bg-gray-100;
+}
+
+.post-page .td {
+  @apply border-2 px-2 py-1;
+  min-width: 100px;
+  max-width: 600px;
+}
+
+.post-page .th {
+  @apply border-2 px-2 py-1;
+  min-width: 100px;
+  max-width: 600px;
 }
