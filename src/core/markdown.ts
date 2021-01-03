@@ -3,6 +3,8 @@ import * as fs from 'fs';
 import dayjs from 'dayjs';
 import { read as matter } from 'gray-matter';
 import rehypeStringify from 'rehype-stringify';
+import gfm from 'remark-gfm';
+import links from 'remark-inline-links';
 import parse from 'remark-parse';
 import remarkPrism from 'remark-prism';
 import remark2rehype from 'remark-rehype';
@@ -56,7 +58,9 @@ export const getPostWithContentBySlug = (slug: string): PostWithContent => {
 export const markdownToHtml = (text: string): string => {
   const ret = unified()
     .use(parse)
+    .use(links)
     .use(addFilenameToProperties)
+    .use(gfm)
     .use(remarkPrism)
     .use(headingLevelDown)
     .use(remark2rehype)
