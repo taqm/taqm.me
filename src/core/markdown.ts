@@ -11,7 +11,7 @@ import remark2rehype from 'remark-rehype';
 import unified from 'unified';
 
 import { Meta, Post } from '../Post';
-import { appendCodeFilename, styling } from './rehype-plugin';
+import { appendCodeFilename, externalLink, styling } from './rehype-plugin';
 import { addFilenameToProperties, headingLevelDown } from './remark-plugin';
 
 type RawMeta = {
@@ -66,6 +66,7 @@ export const markdownToHtml = (text: string): string => {
     .use(remark2rehype)
     .use(appendCodeFilename)
     .use(styling)
+    .use(externalLink)
     .use(rehypeStringify)
     .processSync(text);
   return String(ret);

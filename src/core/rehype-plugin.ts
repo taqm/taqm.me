@@ -13,6 +13,8 @@ export const styling: unified.Plugin = () => {
       p: 'paragraph',
       pre: 'pre',
       code: 'code',
+      a: 'anchor',
+      ul: 'list',
     };
 
     const className = classes[node.tagName];
@@ -29,6 +31,23 @@ export const styling: unified.Plugin = () => {
     }
 
     node.properties.className = [node.properties.className, className];
+  };
+
+  return (node) => {
+    visit(node, 'element', visitor);
+  };
+};
+
+export const externalLink: unified.Plugin = () => {
+  const reg = /^https?/;
+  const visitor: Visitor<HastElementNode> = (node) => {
+    if (node.tagName !== 'a') return;
+
+    const { href }: { href?: string } = node.properties;
+    if (href && reg.test(href)) {
+      node.properties.rel = 'noopener noreferrer';
+      node.properties.target = '_blank';
+    }
   };
 
   return (node) => {
