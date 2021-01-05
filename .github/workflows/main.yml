@@ -8,6 +8,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Setup Node.js 14.x
         uses: actions/setup-node@v2
         with:
@@ -33,36 +34,15 @@ jobs:
         run: npm run lint
 
       - name: Build
+        env:
+          NEXT_PUBLIC_GA_TRACKING_ID: ${{ secrets.GA_TRACKING_ID }}
         run: npm run build --if-present
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        if: github.ref == 'refs/heads/master'
-        with:
-          name: dist
-          path: out
-          if-no-files-found: error
-
-  publish:
-    runs-on: ubuntu-latest
-
-    if: github.ref == 'refs/heads/master'
-    needs: build
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: dist
-          path: dist
-
-      - name: Print dist files.
-        run: ls -la dist
-
       - name: Push to product branch
+        if: github.ref == 'refs/heads/master'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: dist
+          publish_dir: out
           force_orphan: true
           cname: taqm.me
-
