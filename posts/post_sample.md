@@ -2,6 +2,9 @@
 title: テスト用の記事です
 publishedAt: 2000-01-01 10:00
 tags: 
+    - test
+    - test2
+debug: true
 ---
 
 # 見出し1

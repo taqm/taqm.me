@@ -1,6 +1,7 @@
 ---
 title: "TypeScriptでVuexを型安全に扱うライブラリを作りました"
 publishedAt: "2018-10-14T10:31:27+09:00"
+description: "vuexをTypeScriptで扱う際に可能な限り型安全にするライブラリを作ったので解説と紹介を行います。"
 tags:
   - Vue
   - TypeScript

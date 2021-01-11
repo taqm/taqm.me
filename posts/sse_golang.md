@@ -1,6 +1,7 @@
 ---
 title: "Go言語でServerSentEvents(SSE)"
 publishedAt: "2018-10-16T10:38:26+09:00"
+description: "ServerSentEventをGo言語から扱って見たシンプルな例を解説します。"
 tags:
   - Golang
 ---

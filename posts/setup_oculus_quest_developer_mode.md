@@ -1,6 +1,7 @@
 ---
 title: OculusQuestを開発者モードにするメモ
 publishedAt: "2021-01-09"
+description: "OculusQuestを開発者モードにするまでの組織作成などの手順を画像つきで解説していきます。"
 tags:
   - OculusQuest
 ---

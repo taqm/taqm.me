@@ -1,6 +1,7 @@
 ---
 title: "TypeScriptでFunction.bindを使うのはよくない"
 publishedAt: "2018-10-02T15:05:33+09:00"
+description: "JavaScriptの機能であるFunction.bindはTypeScriptではあまり推奨されない理由を解説します。"
 tags:
   - TypeScript
 ---

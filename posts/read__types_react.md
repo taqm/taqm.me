@@ -1,6 +1,7 @@
 ---
 title: "@types/react の中を少し読んでみる"
 publishedAt: "2019-12-14T08:32:19+09:00"
+description: "Reactの型定義として提供されている'@types/react'の実装を読んでみて解説です。"
 tags:
   - React
   - TypeScript

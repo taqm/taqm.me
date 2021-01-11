@@ -1,6 +1,7 @@
 ---
 title: "HTMLのinputタグ[type=file]のブラウザごとの挙動について調べてみた"
 publishedAt: "2018-12-25T08:44:11+09:00"
+description: "input[type=file]でファイル選択後にファイルを消した場合の動作などを各ブラウザの実装を確かめてみました。"
 tags:
   - HTML
 ---

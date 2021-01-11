@@ -1,6 +1,7 @@
 ---
 title: "Unicodeの丸数字（①とか）でやられた件"
 publishedAt: "2019-01-11T07:20:07+09:00"
+description: "業務内でUnicodeの丸数字の罠にハマったのでその共有と解説です。"
 tags:
   - JavaScript
   - 文字コード

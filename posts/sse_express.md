@@ -1,6 +1,7 @@
 ---
 title: "ExpressでServer Sent Event (SSE) を簡単に扱ってみる"
 publishedAt: "2018-06-26T19:38:36+09:00"
+description: "ServerSentEventをNode.jsのライブラリであるexpressから利用しやすくするライブラリを作ったので解説します。"
 tags:
   - JavaScript
   - Node.js

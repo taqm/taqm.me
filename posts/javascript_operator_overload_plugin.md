@@ -1,6 +1,7 @@
 ---
 title: "JavaScriptで演算子オーバーロードしてみる(BabelでAST)"
 publishedAt: "2019-12-08T11:18:34+09:00"
+description: "JavaScriptで演算子オーバーロードを実現するためにbabelのプラグインを作成したため解説します。"
 tags:
   - JavaScript
 ---

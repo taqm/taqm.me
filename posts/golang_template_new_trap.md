@@ -1,6 +1,7 @@
 ---
 title: "Go言語のtext/templateでNewするときの名前について"
 publishedAt: "2018-09-10T09:34:00+09:00"
+description: "Go言語の標準パッケージ'text/template'を利用した際にハマった罠の解説です。"
 tags:
   - Golang
 ---

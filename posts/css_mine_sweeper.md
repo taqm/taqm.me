@@ -1,6 +1,7 @@
 ---
 title: "CSS（SCSS）だけでマインスイーパーを作ってみる"
 publishedAt: "2019-02-05T07:41:06+09:00"
+description: 'JavaScriptを使わず、CSS(SCSS)のみでブラウザ上でマインスイーパーを実装してみた際の解説です。'
 tags:
   - CSS
   - SASS

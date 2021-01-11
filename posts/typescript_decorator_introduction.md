@@ -1,6 +1,7 @@
 ---
 title: "TypeScriptによるデコレータの基礎と実践"
 publishedAt: "2018-12-11T03:11:30+09:00"
+description: "TypeScriptの機能である'デコレータ'について、公式ドキュメントを交えながら基礎と実践の解説を行います。"
 tags:
   - TypeScript
 ---

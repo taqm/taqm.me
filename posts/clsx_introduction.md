@@ -1,6 +1,7 @@
 ---
 title: "Reactでよく使う classnames を置き換えるライブラリ。その名も「clsx」"
 publishedAt: "2019-06-29T06:51:52+09:00"
+description: '妥当classnamesとして作られた[clsx]というライブラリが登場していたので紹介してみます。'
 tags:
   - JavaScript
   - React

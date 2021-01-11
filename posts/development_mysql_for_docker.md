@@ -1,6 +1,7 @@
 ---
 title: "Docker(Compose)を使ったローカル開発用MySQLの準備"
 publishedAt: "2018-09-10T09:45:48+09:00"
+description: "ローカル開発環境で手軽にDocker&MySQLを起動するためのtipsです。"
 tags:
   - MySQL
   - Docker

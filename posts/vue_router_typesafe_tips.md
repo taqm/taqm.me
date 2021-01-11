@@ -1,6 +1,7 @@
 ---
 title: "vue-routerを無理やりTypeScriptで型安全にする"
 publishedAt: "2018-11-07T14:13:53+09:00"
+description: "TypeScriptでVue-routerを使う際に可能な限り方安全にするためのtipsです。"
 tags:
   - Vue
   - TypeScript

@@ -1,6 +1,7 @@
 ---
 title: "FirebaseのWebプロジェクトをビルドしやすくするモジュールを作った"
 publishedAt: "2019-03-14T07:34:57+09:00"
+description: "firebase setup:webを同期的にnode.jsから呼び出しやすくするためのライブラリを作ったので解説します。"
 tags:
   - Firebase
   - JavaScript

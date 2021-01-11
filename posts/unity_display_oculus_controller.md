@@ -1,5 +1,6 @@
 ---
 title: 'Unity & Oculus Questでコントローラーを表示してみる'
+description: 'UnityでOculusQuestアプリを作成する際に、コントローラーを表示するための手順をまとめてみました。'
 publishedAt: '2021-01-10'
 tags:
   - Unity

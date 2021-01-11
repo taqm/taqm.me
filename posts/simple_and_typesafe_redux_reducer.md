@@ -1,6 +1,7 @@
 ---
 title: "TypeScriptで Redux の Reducer部分を型安全かつスッキリ書く"
 publishedAt: "2018-05-08T15:17:14+09:00"
+description: "TypeScriptのConditional Typesを利用してReduxの定義を完結に記述する解説です。"
 tags:
   - Redux
   - TypeScript
