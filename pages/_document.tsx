@@ -43,8 +43,8 @@ const Gtag = () => {
               page_path: window.location.pathname,
             });
           `
-            .replaceAll(/\n/g, '')
-            .replaceAll(/ /g, ''),
+            .replace(/\n/g, '')
+            .replace(/ /g, ''),
         }}
       />
     </>
