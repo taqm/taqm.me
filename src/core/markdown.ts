@@ -12,7 +12,11 @@ import unified from 'unified';
 
 import { Meta, Post } from '../Post';
 import { appendCodeFilename, externalLink, styling } from './rehype-plugin';
-import { addFilenameToProperties, headingLevelDown } from './remark-plugin';
+import {
+  addFilenameToProperties,
+  headingLevelDown,
+  setImageWidth,
+} from './remark-plugin';
 
 type RawMeta = {
   title: string;
@@ -60,6 +64,7 @@ export const markdownToHtml = (text: string): string => {
     .use(parse)
     .use(links)
     .use(addFilenameToProperties)
+    .use(setImageWidth)
     .use(gfm)
     .use(remarkPrism)
     .use(headingLevelDown)

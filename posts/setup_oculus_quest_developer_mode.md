@@ -25,10 +25,10 @@ OculusDevelpersで組織を作成していない場合はこのタイミング�
 ウェブページでの作業を求められるため言われるがままに作成開始を押します。
 
 
-![](/static/setup_oculus_quest_developer_mode/ss1.png) 
-![](/static/setup_oculus_quest_developer_mode/ss2.png) 
-![](/static/setup_oculus_quest_developer_mode/ss3.png) 
-![](/static/setup_oculus_quest_developer_mode/ss4.png) 
+![](/static/setup_oculus_quest_developer_mode/ss1.png?w=200) 
+![](/static/setup_oculus_quest_developer_mode/ss2.png?w=200) 
+![](/static/setup_oculus_quest_developer_mode/ss3.png?w=200) 
+![](/static/setup_oculus_quest_developer_mode/ss4.png?w=200) 
 
 # 組織作成
 
@@ -37,19 +37,19 @@ OculusDevelpersで組織を作成していない場合はこのタイミング�
 そうすると英語のページが出てきますがデザインが崩れたりとちょっと怪しいページなので、
 このURLをPCで開いて作業を進めていきます。（PC側でもOculusDevelopersへログインする必要があります
 
-![](/static/setup_oculus_quest_developer_mode/ss5.png)
-![](/static/setup_oculus_quest_developer_mode/ss6.png)
-![](/static/setup_oculus_quest_developer_mode/ss7.png)
+![](/static/setup_oculus_quest_developer_mode/ss5.png?w=200)
+![](/static/setup_oculus_quest_developer_mode/ss6.png?w=200)
+![](/static/setup_oculus_quest_developer_mode/ss7.png?w=400)
 
 PCで同じページを開いたら「Begin Application Process」をクリックします。  
 
-![](/static/setup_oculus_quest_developer_mode/ss8.png)
+![](/static/setup_oculus_quest_developer_mode/ss8.png?w=400)
 
 そうしたら 「開発者機密保持契約」に同意して組織名を入力すれば完了になります！
 （開発者機密保持契約のページはキャプチャが取れてなかったのでありません（泣）
 
 
-![](/static/setup_oculus_quest_developer_mode/ss9.png)
+![](/static/setup_oculus_quest_developer_mode/ss9.png?w=400)
 
 # ふたたび開発者モードをONにする
 

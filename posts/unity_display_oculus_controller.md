@@ -25,14 +25,14 @@ tags:
 
 このそれぞれへ `Assets/Oculus/VR/OVRControllerPrefab`を１つずつ追加しましょう。
 
-![](/static/unity_display_oculus_controller/add_to_hierarchy.png)
+![](/static/unity_display_oculus_controller/add_to_hierarchy.png?w=300)
 
 このPrefabは見た目がごちゃごちゃしていて本当にこれで良いのか心配になりますが、
 動作する端末に対応じた見た目になるらしいので心配は無用です！
 
 見た目はこんな感じ↓
 
-![](/static/unity_display_oculus_controller/controller_prefab.png)
+![](/static/unity_display_oculus_controller/controller_prefab.png?w=300)
 
 ## スクリプトへの変数を修正する
 追加したコントローラーのPrefabに設定されている`OVR Controller Helper`というスクリプトにある、
@@ -40,7 +40,7 @@ Controllerというパラメータを変更してあげる必要があります�
 
 `LeftHandAnchor`の方は `L Touch`に、`RightHandAnchor`の方は`R Touch`にしましょう。
 
-![](/static/unity_display_oculus_controller/set_script_param.png)
+![](/static/unity_display_oculus_controller/set_script_param.png?w=300)
 
 ---
 

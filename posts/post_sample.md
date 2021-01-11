@@ -33,3 +33,7 @@ const message = 'コードブロック';
 ---
 
 [リンク](https://yahoo.co.jp)
+
+画像
+
+![](/static/setup_oculus_quest_developer_mode/ss1.png?w=300) 

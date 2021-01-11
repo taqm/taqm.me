@@ -22,6 +22,7 @@ export const styling: unified.Plugin = () => {
       tr: 'tr',
       td: 'td',
       th: 'th',
+      img: 'img',
     };
 
     const className = classes[node.tagName];

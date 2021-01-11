@@ -1,9 +1,6 @@
-type MdastData = {
+type MdastData<T> = {
   data?: {
-    hProperties?: {
-      className?: string[];
-      filename?: string;
-    };
+    hProperties?: T;
     hChildren?: lowlight.HastNode[];
   };
 };
@@ -11,15 +8,26 @@ type MdastData = {
 type MDastHeadingNode = {
   type: 'heading';
   depth: number;
-} & MdastData;
+};
 
 type MDastCodeNode = {
   type: 'code';
   lang: string | null;
   value: string;
-} & MdastData;
+} & MdastData<{
+  className?: string[];
+  filename?: string;
+}>;
 
-type MDastNode = MDastCodeNode | MDastHeadingNode;
+type MDastImageNode = {
+  type: 'image';
+  title: string;
+  url: string;
+  width?: string;
+  alt: string;
+} & MdastData<{ width?: string }>;
+
+type MDastNode = MDastCodeNode | MDastHeadingNode | MDastImageNode;
 
 type HastRootNode = {
   type: 'root';
