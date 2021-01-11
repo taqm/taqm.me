@@ -28,7 +28,7 @@ const ShowPostPageTemplate: React.VFC<Props> = ({ post, content }) => (
         ))}
       </ul>
       {/* eslint-disable-next-line react/no-danger */}
-      <div dangerouslySetInnerHTML={{ __html: content }} />
+      <div className="mt-10" dangerouslySetInnerHTML={{ __html: content }} />
     </article>
   </MainLayout>
 );
