@@ -21,13 +21,13 @@ const PostItem: React.VFC<Props> = ({ post }) => (
       <div className="text-sm text-gray-500">
         {post.publishedAt.format('YYYY-MM-DD')}
       </div>
-      <Link href={`/posts/${post.slug}`} prefetch={false}>
+      <Link href={`/posts/${post.slug}`}>
         <a className="link text-xl mt-2">{post.title}</a>
       </Link>
       <ul className="flex flex-wrap mt-2">
         {post.tags?.map((tag) => (
           <li key={tag} className="mr-2 bg-gray-200 hover:bg-gray-300">
-            <Link href={`/tags/${tag}`} prefetch={false}>
+            <Link href={`/tags/${tag}`}>
               <a className="block px-2 h-full text-sm">{tag}</a>
             </Link>
           </li>
