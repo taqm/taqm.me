@@ -14,7 +14,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const router = useRouter();
   React.useEffect(() => {
     const handleRouteChange = (url: string) => {
-      gtag.pageview(url);
+      setTimeout(() => gtag.pageview(url));
     };
     router.events.on('routeChangeComplete', handleRouteChange);
     return () => {
