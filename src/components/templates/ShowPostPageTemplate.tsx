@@ -19,7 +19,7 @@ const ShowPostPageTemplate: React.VFC<Props> = ({ post, content }) => (
       </div>
       <h1 className="text-2xl font-bold">{post.title}</h1>
       <ul className="flex flex-wrap mt-2">
-        {post.tags.map((tag) => (
+        {post.tags?.map((tag) => (
           <li key={tag} className="mr-2 bg-gray-200 hover:bg-gray-300">
             <Link href={`/tags/${tag}`} prefetch={false}>
               <a className="block px-2 h-full text-sm">{tag}</a>

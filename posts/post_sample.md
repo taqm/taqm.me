@@ -1,7 +1,7 @@
 ---
 title: テスト用の記事です
 publishedAt: 2000-01-01 10:00
-tags:
+tags: 
 ---
 
 # 見出し1
@@ -35,5 +35,3 @@ const message = 'コードブロック';
 [リンク](https://yahoo.co.jp)
 
 画像
-
-![](/static/setup_oculus_quest_developer_mode/ss1.png?w=300) 
