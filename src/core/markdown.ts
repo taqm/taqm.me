@@ -21,6 +21,7 @@ import {
 type RawMeta = {
   title: string;
   publishedAt: string;
+  description: string;
   tags: string[];
 };
 
@@ -31,6 +32,7 @@ export type PostWithContent = Post & {
 const pickMeta = (data: RawMeta): Meta => ({
   title: data.title,
   publishedAt: dayjs(data.publishedAt),
+  description: data.description,
   tags: data.tags,
 });
 

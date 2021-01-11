@@ -3,6 +3,7 @@ import dayjs, { Dayjs } from 'dayjs';
 export type Meta = {
   title: string;
   publishedAt: Dayjs;
+  description: string;
   tags: string[];
 };
 
