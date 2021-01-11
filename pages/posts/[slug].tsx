@@ -1,8 +1,10 @@
 import * as fs from 'fs';
 
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import Head from 'next/head';
 import * as React from 'react';
 
+import OgpTags from '../../src/components/OgpTags';
 import ShowPostPageTemplate from '../../src/components/templates/ShowPostPageTemplate';
 import {
   getPostWithContentBySlug,
@@ -21,7 +23,28 @@ type PathParams = {
 
 const ShowPost: NextPage<Props> = ({ post: serializedPost, content }) => {
   const post = deserializePost(serializedPost);
-  return <ShowPostPageTemplate post={post} content={content} />;
+  return (
+    <>
+      <Head>
+        <title key="title">{post.title} | taqm&apos;s blog</title>
+        <meta name="keywords" content={post?.tags.join(',')} />
+        <meta name="description" content={post.description} />
+      </Head>
+      <OgpTags
+        pageUrl={`https://taqm.me/posts/${post.slug}`}
+        description={post.description}
+        siteName="taqm.me"
+        title={`${post.title} | taqm&apos;s blog`}
+        image="https://taqm.me/static/site_logo.png"
+        type="article"
+        twitter={{
+          cardType: 'summary',
+          site: 'taqm',
+        }}
+      />
+      <ShowPostPageTemplate post={post} content={content} />
+    </>
+  );
 };
 
 ShowPost.displayName = 'pages/posts/[slug]';

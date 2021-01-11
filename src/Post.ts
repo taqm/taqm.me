@@ -10,6 +10,7 @@ export type Post = {
   slug: string;
   title: string;
   publishedAt: Dayjs;
+  description: string;
   tags: string[];
 };
 

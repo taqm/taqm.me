@@ -33,6 +33,7 @@ const Gtag = () => {
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
       />
       <script
+        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
@@ -41,7 +42,9 @@ const Gtag = () => {
             gtag('config', '${GA_TRACKING_ID}', {
               page_path: window.location.pathname,
             });
-          `,
+          `
+            .replaceAll(/\n/g, '')
+            .replaceAll(/ /g, ''),
         }}
       />
     </>
