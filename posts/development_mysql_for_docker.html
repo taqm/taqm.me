@@ -1,0 +1,124 @@
+<!DOCTYPE html><html lang="ja"><head><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-X38HKLJWTQ"></script><script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-X38HKLJWTQ', { page_path: window.location.pathname, }); </script><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><meta name="robots" content="nofollow noindex"/><title>Docker(Compose)を使ったローカル開発用MySQLの準備 | taqm&#x27;s blog</title><meta name="keywords" content="MySQL,Docker"/><meta name="description" content="ローカル開発環境で手軽にDocker&amp;MySQLを起動するためのtipsです。"/><meta property="og:url" content="https://taqm.me/posts/development_mysql_for_docker"/><meta property="og:type" content="article"/><meta property="og:title" content="Docker(Compose)を使ったローカル開発用MySQLの準備 | taqm&amp;apos;s blog"/><meta property="og:image" content="https://taqm.me/static/site_logo.png"/><meta property="og:description" content="ローカル開発環境で手軽にDocker&amp;MySQLを起動するためのtipsです。"/><meta property="og:site_name" content="taqm.me"/><meta name="twitter:card" content="summary"/><meta name="twitter:site" content="taqm"/><meta name="next-head-count" content="14"/><link rel="preload" href="/_next/static/css/3bd3ee853585bdba2b55.css" as="style"/><link rel="stylesheet" href="/_next/static/css/3bd3ee853585bdba2b55.css" data-n-g=""/><noscript data-n-css=""></noscript><link rel="preload" href="/_next/static/chunks/main-8741ed3c7ec57f378f59.js" as="script"/><link rel="preload" href="/_next/static/chunks/webpack-95c2b224bccf352ee870.js" as="script"/><link rel="preload" href="/_next/static/chunks/framework.daa7383ad2ab2e6757c1.js" as="script"/><link rel="preload" href="/_next/static/chunks/commons.286c5ad94e4334e87283.js" as="script"/><link rel="preload" href="/_next/static/chunks/pages/_app-62c4ae74494db6a57e9e.js" as="script"/><link rel="preload" href="/_next/static/chunks/79afb1f29f0e22fb2195c114356294f95861ebcc.293ad4049eec03f4e065.js" as="script"/><link rel="preload" href="/_next/static/chunks/2c3b9bffc7150b37a7b3810dfcf1c0b0fac2bd18.26412b03d1df03d45396.js" as="script"/><link rel="preload" href="/_next/static/chunks/pages/posts/%5Bslug%5D-d84c8237cab24ecd19e3.js" as="script"/><style id="__jsx-2615209551">.inner.jsx-2615209551{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;height:2.5rem;}@media (min-width:640px){.inner.jsx-2615209551{-webkit-box-pack:start;-webkit-justify-content:flex-start;-ms-flex-pack:start;justify-content:flex-start;height:4rem;padding-left:1.5rem;padding-right:1.5rem;}}</style></head><body><div id="__next"><header class="jsx-2615209551 border-b border-gray-200 bg-white"><div class="jsx-2615209551 inner max-w-screen-lg mx-auto"><a class="jsx-2615209551 text-xl sm:text-2xl" href="/">taqm&#x27;blog</a></div></header><main class="container py-16"><article class="post-page"><div class="text-sm text-gray-500">2018-09-10</div><h1 class="text-2xl font-bold">Docker(Compose)を使ったローカル開発用MySQLの準備</h1><ul class="flex flex-wrap mt-2"><li class="mr-2 bg-gray-200 hover:bg-gray-300"><a class="block px-2 h-full text-sm" href="/tags/MySQL">MySQL</a></li><li class="mr-2 bg-gray-200 hover:bg-gray-300"><a class="block px-2 h-full text-sm" href="/tags/Docker">Docker</a></li></ul><div class="mt-10"><p class="paragraph">忘れないようにメモ</p>
+<p class="paragraph">あくまでローカル開発用のコンテナ作成を目的としており、
+本番環境や、永続化するような環境へ適応する場合には色々と他の手順が必要ですのでご注意ください。</p>
+<p class="paragraph">基本的にオフィシャルページに書いてあることしかやってません！
+<a href="https://hub.docker.com/_/mysql/" class="anchor" rel="noopener noreferrer" target="_blank">公式ページ</a></p>
+<h3 class="heading lv-3">ディレクトリ構成</h3>
+<p class="paragraph">とりあえず↓のような構成で進めていきます</p>
+<div class="remark-highlight"><pre class="language-unknown pre"><code class="language-unknown code">.
+├── docker-compose.yml
+├── docker-entrypoint-initdb.d
+│   ├── 01_create_tables.sql
+│   └── 02_test_user.sql
+└── my.cnf</code></pre></div>
+<p class="paragraph">後述しますが<code class="code">docker-entrypoint-initdb.d</code>配下には構築時に実行したいものを配置します。</p>
+<h3 class="heading lv-3">docker-compose.ymlの中身</h3>
+<p class="paragraph">まずは内容を先に紹介</p>
+<div class="remark-highlight"><pre class="language-yaml pre"><code class="language-yaml code"><span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token string">'3'</span>
+<span class="token key atrule">services</span><span class="token punctuation">:</span>
+  <span class="token key atrule">db</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> mysql<span class="token punctuation">:</span>タグ
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"3306:3306"</span>
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">MYSQL_DATABASE</span><span class="token punctuation">:</span> database_name
+      <span class="token key atrule">MYSQL_USER</span><span class="token punctuation">:</span> user_name
+      <span class="token key atrule">MYSQL_PASSWORD</span><span class="token punctuation">:</span> password
+      <span class="token key atrule">MYSQL_ALLOW_EMPTY_PASSWORD</span><span class="token punctuation">:</span> <span class="token string">"yes"</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> ./docker<span class="token punctuation">-</span>entrypoint<span class="token punctuation">-</span>initdb.d<span class="token punctuation">:</span>/docker<span class="token punctuation">-</span>entrypoint<span class="token punctuation">-</span>initdb.d
+      <span class="token punctuation">-</span> ./my.cnf<span class="token punctuation">:</span>/etc/mysql/conf.d/my.cnf
+</code></pre></div>
+<p class="paragraph">要点だけ簡単に説明してきます</p>
+<h4 class="heading lv-4">environment</h4>
+<p class="paragraph">環境変数です。
+せっかくなので公式ページに載っているものすべてを説明します。</p>
+<table class="table">
+<thead class="thead">
+<tr class="tr">
+<th class="th">変数名</th>
+<th class="th">説明</th>
+</tr>
+</thead>
+<tbody class="tbody">
+<tr class="tr">
+<td class="td">MYSQL_ROOT_PASSWORD</td>
+<td class="td">この変数の設定は<strong>必須</strong>です!名前の通りROOTユーザのパスワードになります。</td>
+</tr>
+<tr class="tr">
+<td class="td">MYSQL_DATABASE</td>
+<td class="td">起動時に作成されるDBの名前です。</td>
+</tr>
+<tr class="tr">
+<td class="td">MYSQL_USER</td>
+<td class="td">起動時に新しいユーザを作成します。ここで作成したユーザには[MYSQL_DATABASE] で指定したDBへの<strong>GRANT ALL</strong> 権限が付与されます。</td>
+</tr>
+<tr class="tr">
+<td class="td">MYSQL_PASSWORD</td>
+<td class="td">上記の[MYSQL_USER] で作成したユーザのパスワードです。ユーザを作成する場合にはこちらが必須になります。</td>
+</tr>
+<tr class="tr">
+<td class="td">MYSQL_ALLOW_EMPTY_PASSWORD</td>
+<td class="td">[MYSQL_ROOT_PASSWORD] に空を設定できる用にするフラグです。<code class="code">"yes"</code>を設定することで空を設定することが可能になります。ただし、よくわからないならおすすめしない設定です。</td>
+</tr>
+<tr class="tr">
+<td class="td">MYSQL_RANDOM_ROOT_PASSWORD</td>
+<td class="td"><code class="code">"yes"</code>を設定することでランダムなパスワードが発行されます。起動時の標準出力へ<code class="code">GENERATED ROOT PASSWORD:  xxxxxxx</code>と出力されますが、正直ローカル開発用ならこのオプションを使うことはないと思います。</td>
+</tr>
+<tr class="tr">
+<td class="td">MYSQL_ONETIME_PASSWORD</td>
+<td class="td">rootユーザのパスワード一度で期限切れにしてくれるらしいです。試してみたのですが、何故かうまく行かなかったので動作確認はできていません・・・</td>
+</tr>
+</tbody>
+</table>
+<p class="paragraph">これらを踏まえてもう一度見てみると</p>
+<div class="remark-highlight"><pre class="language-yaml pre"><code class="language-yaml code"><span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">MYSQL_DATABASE</span><span class="token punctuation">:</span> database_name
+      <span class="token key atrule">MYSQL_USER</span><span class="token punctuation">:</span> user_name
+      <span class="token key atrule">MYSQL_PASSWORD</span><span class="token punctuation">:</span> password
+      <span class="token key atrule">MYSQL_ALLOW_EMPTY_PASSWORD</span><span class="token punctuation">:</span> <span class="token string">"yes"</span>
+</code></pre></div>
+<p class="paragraph">本当に必要最小限の設定ですね＾＾</p>
+<h4 class="heading lv-4">volumes</h4>
+<p class="paragraph">マウントするボリュームです。</p>
+<h5 class="heading lv-5">docker-entrypoint-initdb.d</h5>
+<p class="paragraph">mysqlのイメージは<code class="code">/docker-entrypoint-initdb.d</code>配下のファイルを実行してくれます。
+そのパスにマウントすることで、ローカルにあるSQLを実行してもらう作戦です。</p>
+<p class="paragraph">実行してくれるのは  <code class="code">.sh</code>, <code class="code">.sql</code>, <code class="code">.sql.gz</code> とのこと。
+また、実行の順番はアルファベット順とのことなので、
+ファイル名の先頭に01_,02_などをつけて実行順を制御してあげると良さそうです。</p>
+<p class="paragraph">そしてこのSQLは環境変数「MYSQL_DATABASE」へ設定したDBで実行されます。</p>
+<h5 class="heading lv-5">my.cof</h5>
+<p class="paragraph">MySQLでマルチバイト文字を扱う場合に設定するものです。
+詳しい内容は<a href="https://qiita.com/luccafort/items/0553c589dcc6459746bc" class="anchor" rel="noopener noreferrer" target="_blank">こちら</a>を参考にしてください!</p>
+<p class="paragraph">ちなみに中身はこんなんです↓</p>
+<div class="remark-highlight"><pre class="language-unknown pre"><code class="language-unknown code">[mysqld]
+character-set-server=utf8
+collation-server=utf8_general_ci
+
+[client]
+default-character-set=utf8</code></pre></div>
+<h3 class="heading lv-3">そして実行</h3>
+<div class="remark-highlight"><pre class="language-bash pre"><code class="language-bash code"><span class="token comment"># 起動</span>
+$ docker-compose up -d <span class="token comment"># 起動</span>
+
+<span class="token comment"># rootユーザで接続</span>
+$ docker-compose <span class="token builtin class-name">exec</span> db mysql
+
+<span class="token comment"># 作成したユーザでログインする場合は↓</span>
+<span class="token comment"># docker-compose exec db mysql -u user_name -p</span>
+
+</code></pre></div>
+<p class="paragraph">これでmysqlへ接続できるはずです！
+２つめのコマンドは、「dbコンテナで<code class="code">mysql</code>コマンドを実行する」ということになります。
+この設定ではrootパスワードを設定していないので<code class="code">mysql</code>だけでも接続できています。</p>
+<p class="paragraph">ちなみに<code class="code">mysql</code>の部分を<code class="code">bash</code>にすることで、
+bash起動も可能ですのでそこは目的に応じて使い分けてください。</p>
+<h2 class="heading lv-2">注意</h2>
+<p class="paragraph">もしローカルDBのデータも永続化したい！って場合だと、
+このままではコンテナを作り直すとデータが吹っ飛んでしまうので、<code class="code">/var/lib/mysql</code>をマウントしてあげるなどの必要があります。
+ただし、今の構成は最初にSQLが流れてしまうので色々な<strong>調整が必要です</strong>・・・</p>
+<h2 class="heading lv-2">感想</h2>
+<p class="paragraph">実際はクライアントツールの設定も同時に行うことになると思いますが、
+最小構成としてはこの様になると思います。</p>
+<p class="paragraph">思った以上にシンプルな設定で済んだので積極的に利用していきます＾＾</p></div></article></main></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"post":"{\"slug\":\"development_mysql_for_docker\",\"title\":\"Docker(Compose)を使ったローカル開発用MySQLの準備\",\"publishedAt\":\"2018-09-10T00:45:48.000Z\",\"description\":\"ローカル開発環境で手軽にDocker\u0026MySQLを起動するためのtipsです。\",\"tags\":[\"MySQL\",\"Docker\"]}","content":"\u003cp class=\"paragraph\"\u003e忘れないようにメモ\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003eあくまでローカル開発用のコンテナ作成を目的としており、\n本番環境や、永続化するような環境へ適応する場合には色々と他の手順が必要ですのでご注意ください。\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003e基本的にオフィシャルページに書いてあることしかやってません！\n\u003ca href=\"https://hub.docker.com/_/mysql/\" class=\"anchor\" rel=\"noopener noreferrer\" target=\"_blank\"\u003e公式ページ\u003c/a\u003e\u003c/p\u003e\n\u003ch3 class=\"heading lv-3\"\u003eディレクトリ構成\u003c/h3\u003e\n\u003cp class=\"paragraph\"\u003eとりあえず↓のような構成で進めていきます\u003c/p\u003e\n\u003cdiv class=\"remark-highlight\"\u003e\u003cpre class=\"language-unknown pre\"\u003e\u003ccode class=\"language-unknown code\"\u003e.\n├── docker-compose.yml\n├── docker-entrypoint-initdb.d\n│   ├── 01_create_tables.sql\n│   └── 02_test_user.sql\n└── my.cnf\u003c/code\u003e\u003c/pre\u003e\u003c/div\u003e\n\u003cp class=\"paragraph\"\u003e後述しますが\u003ccode class=\"code\"\u003edocker-entrypoint-initdb.d\u003c/code\u003e配下には構築時に実行したいものを配置します。\u003c/p\u003e\n\u003ch3 class=\"heading lv-3\"\u003edocker-compose.ymlの中身\u003c/h3\u003e\n\u003cp class=\"paragraph\"\u003eまずは内容を先に紹介\u003c/p\u003e\n\u003cdiv class=\"remark-highlight\"\u003e\u003cpre class=\"language-yaml pre\"\u003e\u003ccode class=\"language-yaml code\"\u003e\u003cspan class=\"token key atrule\"\u003eversion\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e \u003cspan class=\"token string\"\u003e'3'\u003c/span\u003e\n\u003cspan class=\"token key atrule\"\u003eservices\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e\n  \u003cspan class=\"token key atrule\"\u003edb\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e\n    \u003cspan class=\"token key atrule\"\u003eimage\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e mysql\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003eタグ\n    \u003cspan class=\"token key atrule\"\u003eports\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e\n      \u003cspan class=\"token punctuation\"\u003e-\u003c/span\u003e \u003cspan class=\"token string\"\u003e\"3306:3306\"\u003c/span\u003e\n    \u003cspan class=\"token key atrule\"\u003eenvironment\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e\n      \u003cspan class=\"token key atrule\"\u003eMYSQL_DATABASE\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e database_name\n      \u003cspan class=\"token key atrule\"\u003eMYSQL_USER\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e user_name\n      \u003cspan class=\"token key atrule\"\u003eMYSQL_PASSWORD\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e password\n      \u003cspan class=\"token key atrule\"\u003eMYSQL_ALLOW_EMPTY_PASSWORD\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e \u003cspan class=\"token string\"\u003e\"yes\"\u003c/span\u003e\n    \u003cspan class=\"token key atrule\"\u003evolumes\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e\n      \u003cspan class=\"token punctuation\"\u003e-\u003c/span\u003e ./docker\u003cspan class=\"token punctuation\"\u003e-\u003c/span\u003eentrypoint\u003cspan class=\"token punctuation\"\u003e-\u003c/span\u003einitdb.d\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e/docker\u003cspan class=\"token punctuation\"\u003e-\u003c/span\u003eentrypoint\u003cspan class=\"token punctuation\"\u003e-\u003c/span\u003einitdb.d\n      \u003cspan class=\"token punctuation\"\u003e-\u003c/span\u003e ./my.cnf\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e/etc/mysql/conf.d/my.cnf\n\u003c/code\u003e\u003c/pre\u003e\u003c/div\u003e\n\u003cp class=\"paragraph\"\u003e要点だけ簡単に説明してきます\u003c/p\u003e\n\u003ch4 class=\"heading lv-4\"\u003eenvironment\u003c/h4\u003e\n\u003cp class=\"paragraph\"\u003e環境変数です。\nせっかくなので公式ページに載っているものすべてを説明します。\u003c/p\u003e\n\u003ctable class=\"table\"\u003e\n\u003cthead class=\"thead\"\u003e\n\u003ctr class=\"tr\"\u003e\n\u003cth class=\"th\"\u003e変数名\u003c/th\u003e\n\u003cth class=\"th\"\u003e説明\u003c/th\u003e\n\u003c/tr\u003e\n\u003c/thead\u003e\n\u003ctbody class=\"tbody\"\u003e\n\u003ctr class=\"tr\"\u003e\n\u003ctd class=\"td\"\u003eMYSQL_ROOT_PASSWORD\u003c/td\u003e\n\u003ctd class=\"td\"\u003eこの変数の設定は\u003cstrong\u003e必須\u003c/strong\u003eです!名前の通りROOTユーザのパスワードになります。\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr class=\"tr\"\u003e\n\u003ctd class=\"td\"\u003eMYSQL_DATABASE\u003c/td\u003e\n\u003ctd class=\"td\"\u003e起動時に作成されるDBの名前です。\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr class=\"tr\"\u003e\n\u003ctd class=\"td\"\u003eMYSQL_USER\u003c/td\u003e\n\u003ctd class=\"td\"\u003e起動時に新しいユーザを作成します。ここで作成したユーザには[MYSQL_DATABASE] で指定したDBへの\u003cstrong\u003eGRANT ALL\u003c/strong\u003e 権限が付与されます。\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr class=\"tr\"\u003e\n\u003ctd class=\"td\"\u003eMYSQL_PASSWORD\u003c/td\u003e\n\u003ctd class=\"td\"\u003e上記の[MYSQL_USER] で作成したユーザのパスワードです。ユーザを作成する場合にはこちらが必須になります。\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr class=\"tr\"\u003e\n\u003ctd class=\"td\"\u003eMYSQL_ALLOW_EMPTY_PASSWORD\u003c/td\u003e\n\u003ctd class=\"td\"\u003e[MYSQL_ROOT_PASSWORD] に空を設定できる用にするフラグです。\u003ccode class=\"code\"\u003e\"yes\"\u003c/code\u003eを設定することで空を設定することが可能になります。ただし、よくわからないならおすすめしない設定です。\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr class=\"tr\"\u003e\n\u003ctd class=\"td\"\u003eMYSQL_RANDOM_ROOT_PASSWORD\u003c/td\u003e\n\u003ctd class=\"td\"\u003e\u003ccode class=\"code\"\u003e\"yes\"\u003c/code\u003eを設定することでランダムなパスワードが発行されます。起動時の標準出力へ\u003ccode class=\"code\"\u003eGENERATED ROOT PASSWORD:  xxxxxxx\u003c/code\u003eと出力されますが、正直ローカル開発用ならこのオプションを使うことはないと思います。\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr class=\"tr\"\u003e\n\u003ctd class=\"td\"\u003eMYSQL_ONETIME_PASSWORD\u003c/td\u003e\n\u003ctd class=\"td\"\u003erootユーザのパスワード一度で期限切れにしてくれるらしいです。試してみたのですが、何故かうまく行かなかったので動作確認はできていません・・・\u003c/td\u003e\n\u003c/tr\u003e\n\u003c/tbody\u003e\n\u003c/table\u003e\n\u003cp class=\"paragraph\"\u003eこれらを踏まえてもう一度見てみると\u003c/p\u003e\n\u003cdiv class=\"remark-highlight\"\u003e\u003cpre class=\"language-yaml pre\"\u003e\u003ccode class=\"language-yaml code\"\u003e\u003cspan class=\"token key atrule\"\u003eenvironment\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e\n      \u003cspan class=\"token key atrule\"\u003eMYSQL_DATABASE\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e database_name\n      \u003cspan class=\"token key atrule\"\u003eMYSQL_USER\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e user_name\n      \u003cspan class=\"token key atrule\"\u003eMYSQL_PASSWORD\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e password\n      \u003cspan class=\"token key atrule\"\u003eMYSQL_ALLOW_EMPTY_PASSWORD\u003c/span\u003e\u003cspan class=\"token punctuation\"\u003e:\u003c/span\u003e \u003cspan class=\"token string\"\u003e\"yes\"\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\u003c/div\u003e\n\u003cp class=\"paragraph\"\u003e本当に必要最小限の設定ですね＾＾\u003c/p\u003e\n\u003ch4 class=\"heading lv-4\"\u003evolumes\u003c/h4\u003e\n\u003cp class=\"paragraph\"\u003eマウントするボリュームです。\u003c/p\u003e\n\u003ch5 class=\"heading lv-5\"\u003edocker-entrypoint-initdb.d\u003c/h5\u003e\n\u003cp class=\"paragraph\"\u003emysqlのイメージは\u003ccode class=\"code\"\u003e/docker-entrypoint-initdb.d\u003c/code\u003e配下のファイルを実行してくれます。\nそのパスにマウントすることで、ローカルにあるSQLを実行してもらう作戦です。\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003e実行してくれるのは  \u003ccode class=\"code\"\u003e.sh\u003c/code\u003e, \u003ccode class=\"code\"\u003e.sql\u003c/code\u003e, \u003ccode class=\"code\"\u003e.sql.gz\u003c/code\u003e とのこと。\nまた、実行の順番はアルファベット順とのことなので、\nファイル名の先頭に01_,02_などをつけて実行順を制御してあげると良さそうです。\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003eそしてこのSQLは環境変数「MYSQL_DATABASE」へ設定したDBで実行されます。\u003c/p\u003e\n\u003ch5 class=\"heading lv-5\"\u003emy.cof\u003c/h5\u003e\n\u003cp class=\"paragraph\"\u003eMySQLでマルチバイト文字を扱う場合に設定するものです。\n詳しい内容は\u003ca href=\"https://qiita.com/luccafort/items/0553c589dcc6459746bc\" class=\"anchor\" rel=\"noopener noreferrer\" target=\"_blank\"\u003eこちら\u003c/a\u003eを参考にしてください!\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003eちなみに中身はこんなんです↓\u003c/p\u003e\n\u003cdiv class=\"remark-highlight\"\u003e\u003cpre class=\"language-unknown pre\"\u003e\u003ccode class=\"language-unknown code\"\u003e[mysqld]\ncharacter-set-server=utf8\ncollation-server=utf8_general_ci\n\n[client]\ndefault-character-set=utf8\u003c/code\u003e\u003c/pre\u003e\u003c/div\u003e\n\u003ch3 class=\"heading lv-3\"\u003eそして実行\u003c/h3\u003e\n\u003cdiv class=\"remark-highlight\"\u003e\u003cpre class=\"language-bash pre\"\u003e\u003ccode class=\"language-bash code\"\u003e\u003cspan class=\"token comment\"\u003e# 起動\u003c/span\u003e\n$ docker-compose up -d \u003cspan class=\"token comment\"\u003e# 起動\u003c/span\u003e\n\n\u003cspan class=\"token comment\"\u003e# rootユーザで接続\u003c/span\u003e\n$ docker-compose \u003cspan class=\"token builtin class-name\"\u003eexec\u003c/span\u003e db mysql\n\n\u003cspan class=\"token comment\"\u003e# 作成したユーザでログインする場合は↓\u003c/span\u003e\n\u003cspan class=\"token comment\"\u003e# docker-compose exec db mysql -u user_name -p\u003c/span\u003e\n\n\u003c/code\u003e\u003c/pre\u003e\u003c/div\u003e\n\u003cp class=\"paragraph\"\u003eこれでmysqlへ接続できるはずです！\n２つめのコマンドは、「dbコンテナで\u003ccode class=\"code\"\u003emysql\u003c/code\u003eコマンドを実行する」ということになります。\nこの設定ではrootパスワードを設定していないので\u003ccode class=\"code\"\u003emysql\u003c/code\u003eだけでも接続できています。\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003eちなみに\u003ccode class=\"code\"\u003emysql\u003c/code\u003eの部分を\u003ccode class=\"code\"\u003ebash\u003c/code\u003eにすることで、\nbash起動も可能ですのでそこは目的に応じて使い分けてください。\u003c/p\u003e\n\u003ch2 class=\"heading lv-2\"\u003e注意\u003c/h2\u003e\n\u003cp class=\"paragraph\"\u003eもしローカルDBのデータも永続化したい！って場合だと、\nこのままではコンテナを作り直すとデータが吹っ飛んでしまうので、\u003ccode class=\"code\"\u003e/var/lib/mysql\u003c/code\u003eをマウントしてあげるなどの必要があります。\nただし、今の構成は最初にSQLが流れてしまうので色々な\u003cstrong\u003e調整が必要です\u003c/strong\u003e・・・\u003c/p\u003e\n\u003ch2 class=\"heading lv-2\"\u003e感想\u003c/h2\u003e\n\u003cp class=\"paragraph\"\u003e実際はクライアントツールの設定も同時に行うことになると思いますが、\n最小構成としてはこの様になると思います。\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003e思った以上にシンプルな設定で済んだので積極的に利用していきます＾＾\u003c/p\u003e"},"__N_SSG":true},"page":"/posts/[slug]","query":{"slug":"development_mysql_for_docker"},"buildId":"2TeC_BqFkmcRD1K9YUrqZ","nextExport":false,"isFallback":false,"gsp":true}</script><script nomodule="" src="/_next/static/chunks/polyfills-51ce6eb9ed73aacaf515.js"></script><script src="/_next/static/chunks/main-8741ed3c7ec57f378f59.js" async=""></script><script src="/_next/static/chunks/webpack-95c2b224bccf352ee870.js" async=""></script><script src="/_next/static/chunks/framework.daa7383ad2ab2e6757c1.js" async=""></script><script src="/_next/static/chunks/commons.286c5ad94e4334e87283.js" async=""></script><script src="/_next/static/chunks/pages/_app-62c4ae74494db6a57e9e.js" async=""></script><script src="/_next/static/chunks/79afb1f29f0e22fb2195c114356294f95861ebcc.293ad4049eec03f4e065.js" async=""></script><script src="/_next/static/chunks/2c3b9bffc7150b37a7b3810dfcf1c0b0fac2bd18.26412b03d1df03d45396.js" async=""></script><script src="/_next/static/chunks/pages/posts/%5Bslug%5D-d84c8237cab24ecd19e3.js" async=""></script><script src="/_next/static/2TeC_BqFkmcRD1K9YUrqZ/_buildManifest.js" async=""></script><script src="/_next/static/2TeC_BqFkmcRD1K9YUrqZ/_ssgManifest.js" async=""></script></body></html>

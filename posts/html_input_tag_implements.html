@@ -1,0 +1,132 @@
+<!DOCTYPE html><html lang="ja"><head><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-X38HKLJWTQ"></script><script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-X38HKLJWTQ', { page_path: window.location.pathname, }); </script><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><meta name="robots" content="nofollow noindex"/><title>HTMLのinputタグ[type=file]のブラウザごとの挙動について調べてみた | taqm&#x27;s blog</title><meta name="keywords" content="HTML"/><meta name="description" content="input[type=file]でファイル選択後にファイルを消した場合の動作などを各ブラウザの実装を確かめてみました。"/><meta property="og:url" content="https://taqm.me/posts/html_input_tag_implements"/><meta property="og:type" content="article"/><meta property="og:title" content="HTMLのinputタグ[type=file]のブラウザごとの挙動について調べてみた | taqm&amp;apos;s blog"/><meta property="og:image" content="https://taqm.me/static/site_logo.png"/><meta property="og:description" content="input[type=file]でファイル選択後にファイルを消した場合の動作などを各ブラウザの実装を確かめてみました。"/><meta property="og:site_name" content="taqm.me"/><meta name="twitter:card" content="summary"/><meta name="twitter:site" content="taqm"/><meta name="next-head-count" content="14"/><link rel="preload" href="/_next/static/css/3bd3ee853585bdba2b55.css" as="style"/><link rel="stylesheet" href="/_next/static/css/3bd3ee853585bdba2b55.css" data-n-g=""/><noscript data-n-css=""></noscript><link rel="preload" href="/_next/static/chunks/main-8741ed3c7ec57f378f59.js" as="script"/><link rel="preload" href="/_next/static/chunks/webpack-95c2b224bccf352ee870.js" as="script"/><link rel="preload" href="/_next/static/chunks/framework.daa7383ad2ab2e6757c1.js" as="script"/><link rel="preload" href="/_next/static/chunks/commons.286c5ad94e4334e87283.js" as="script"/><link rel="preload" href="/_next/static/chunks/pages/_app-62c4ae74494db6a57e9e.js" as="script"/><link rel="preload" href="/_next/static/chunks/79afb1f29f0e22fb2195c114356294f95861ebcc.293ad4049eec03f4e065.js" as="script"/><link rel="preload" href="/_next/static/chunks/2c3b9bffc7150b37a7b3810dfcf1c0b0fac2bd18.26412b03d1df03d45396.js" as="script"/><link rel="preload" href="/_next/static/chunks/pages/posts/%5Bslug%5D-d84c8237cab24ecd19e3.js" as="script"/><style id="__jsx-2615209551">.inner.jsx-2615209551{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;height:2.5rem;}@media (min-width:640px){.inner.jsx-2615209551{-webkit-box-pack:start;-webkit-justify-content:flex-start;-ms-flex-pack:start;justify-content:flex-start;height:4rem;padding-left:1.5rem;padding-right:1.5rem;}}</style></head><body><div id="__next"><header class="jsx-2615209551 border-b border-gray-200 bg-white"><div class="jsx-2615209551 inner max-w-screen-lg mx-auto"><a class="jsx-2615209551 text-xl sm:text-2xl" href="/">taqm&#x27;blog</a></div></header><main class="container py-16"><article class="post-page"><div class="text-sm text-gray-500">2018-12-24</div><h1 class="text-2xl font-bold">HTMLのinputタグ[type=file]のブラウザごとの挙動について調べてみた</h1><ul class="flex flex-wrap mt-2"><li class="mr-2 bg-gray-200 hover:bg-gray-300"><a class="block px-2 h-full text-sm" href="/tags/HTML">HTML</a></li></ul><div class="mt-10"><h2 class="heading lv-2">はじめに</h2>
+<p class="paragraph">みなさんHTMLタグの一つである<code class="code">input</code>タグはご存知だと思います。
+その中でも<a href="http://www.htmq.com/html/input_file.shtml" class="anchor" rel="noopener noreferrer" target="_blank">type="file"</a>についてぼくはこんな疑問を持ちました。</p>
+<p class="paragraph"><strong>選択したファイルはどこのファイル？コピーとかされているの？</strong></p>
+<p class="paragraph">これみなさん知っていますか？
+ちょこっと調べたんですがなかなか情報がなかったので
+いろいろ自分で調査してみました。</p>
+<p class="paragraph">（本音は調査が面白そうだったのでそんなに本気で調べてないだけです</p>
+<h2 class="heading lv-2">仮説を立てる</h2>
+<p class="paragraph">まずは仮説をいくつか立ててそれぞれを検証していきます</p>
+<p class="paragraph">A. ブラウザはファイル参照だけ持っている
+B. ファイル選択時にTemp領域へコピーしている
+C. メモリ上に抱えている</p>
+<p class="paragraph">たぶんこれらのどれかじゃないかなと思っており、
+個人的にはBが濃厚だと勝手に考えています。</p>
+<h2 class="heading lv-2">調査開始</h2>
+<p class="paragraph">ファイルアップロード機能が必要なので
+簡単にファイルをアップロードするだけのアプリを自前で作りました。
+<a href="https://github.com/taqm/go-simple-fileup" class="anchor" rel="noopener noreferrer" target="_blank">https://github.com/taqm/go-simple-fileup</a></p>
+<p class="paragraph">これは・・・雑の極みっ・・・！
+気にせずこれで検証を行っていきましょう</p>
+<h3 class="heading lv-3">A. ブラウザはファイル参照だけ持っている 説</h3>
+<p class="paragraph">まずはこちら検証していきましょう</p>
+<h4 class="heading lv-4">説の内容</h4>
+<ul class="list unordered">
+<li>ブラウザはアップロード対象ファイルへの参照だけを保持</li>
+<li>ファイルをアップロードする際は実際のファイルがそのまま送信される</li>
+</ul>
+<p class="paragraph">こんなところでしょうか</p>
+<h4 class="heading lv-4">検証内容</h4>
+<p class="paragraph">もしブラウザがファイルへの参照を持っているだけならば、
+ファイル選択後にファイルを更新したときに更新後のファイルが送信されるはず！</p>
+<p class="paragraph">作った検証用アプリを使って検証してみます</p>
+<p class="paragraph">まずは適当なテキストファイルを用意します。</p>
+<div class="has-filename"><div class="filename">sample.txt</div><pre class="language-unknown pre"><code class="language-unknown code">hoge</code></pre></div>
+<p class="paragraph">そしてこのファイルを選択後に更新してから送信してみます。</p>
+<div class="has-filename"><div class="filename">sample.txt（更新後</div><pre class="language-unknown pre"><code class="language-unknown code">fuga</code></pre></div>
+<h4 class="heading lv-4">結果</h4>
+<p class="paragraph">送信されたファイルの中身は以下でした</p>
+<div class="has-filename"><div class="filename">sample.txt</div><pre class="language-unknown pre"><code class="language-unknown code">fuga</code></pre></div>
+<p class="paragraph">更新されてる...
+あれー？
+一番ないと思っていた仮説だったのにいきなりヒット？</p>
+<p class="paragraph">では更新だけでなくファイル選択後に、対象ファイルを削除してみましょう</p>
+<p class="paragraph">なんと！リクエストに失敗してしまいました。</p>
+<p class="paragraph">やはりただファイル参照を持っているだけで
+実際のファイルへの更新を行うと、選択しているファイルにも影響が起きるようです。</p>
+<h3 class="heading lv-3">ブラウザごとの挙動</h3>
+<p class="paragraph">こういう問題はブラウザごとに違うのでは？という疑問が出てきます。
+先に述べた実証はChromeで行っていたため
+他のブラウザではどうなっているのか見てみましょう</p>
+<h4 class="heading lv-4">Safari</h4>
+<p class="paragraph"><strong>選択後に、更新した場合</strong>
+やはり送信されたファイルは更新後の内容になっていました。
+Chromeと同じ動きです。</p>
+<p class="paragraph"><strong>選択後に、削除した場合</strong>
+削除後に送信した結果、
+同名の空ファイルが送信されてしまいました。</p>
+<h4 class="heading lv-4">Firefox</h4>
+<p class="paragraph"><strong>選択後に、更新した場合</strong>
+送信されたファイルは更新後の内容になっていました。
+ChromeやSafariと同じ動きです。</p>
+<p class="paragraph"><strong>選択後に、削除した場合</strong>
+ファイルの送信が行われませんでした。
+そもそもファイルが選択されていないような動きになっています。</p>
+<h4 class="heading lv-4">Microsoft Edge</h4>
+<p class="paragraph"><strong>選択後に、更新した場合</strong>
+なんと同名の空ファイルが送信されてしまいました。</p>
+<p class="paragraph"><strong>選択後に、削除した場合</strong>
+削除の場合も、更新と同様に空ファイルが送信されています。</p>
+<h4 class="heading lv-4">Internet Exproler 11</h4>
+<p class="paragraph"><strong>選択後に、更新した場合</strong>
+ChromeやSafari同様に更新後の内容が送信されました。</p>
+<p class="paragraph"><strong>選択後に、削除した場合</strong>
+なんと削除前のファイルが正常に送信されるではありませんか。
+そして</p>
+<p class="paragraph">選択　→　更新　→　削除　→　送信</p>
+<p class="paragraph">と操作を行った場合には更新されたファイルが送信されていました。</p>
+<h4 class="heading lv-4">ブラウザ別の挙動まとめ</h4>
+<p class="paragraph">ブラウザごとに送信されたファイルをまとめてみます。</p>
+<table class="table">
+<thead class="thead">
+<tr class="tr">
+<th class="th">　</th>
+<th class="th">選択後に更新</th>
+<th class="th">選択後に削除</th>
+</tr>
+</thead>
+<tbody class="tbody">
+<tr class="tr">
+<td class="td">Chrome</td>
+<td class="td">更新後のファイル</td>
+<td class="td">エラー発生</td>
+</tr>
+<tr class="tr">
+<td class="td">Safari</td>
+<td class="td">更新後のファイル</td>
+<td class="td">空ファイル</td>
+</tr>
+<tr class="tr">
+<td class="td">Firefox</td>
+<td class="td">更新後のファイル</td>
+<td class="td">送信せず</td>
+</tr>
+<tr class="tr">
+<td class="td">Edge</td>
+<td class="td">空ファイル</td>
+<td class="td">空ファイル</td>
+</tr>
+<tr class="tr">
+<td class="td">IE11</td>
+<td class="td">更新後のファイル</td>
+<td class="td">削除前のファイル</td>
+</tr>
+</tbody>
+</table>
+<p class="paragraph">バラバラだ</p>
+<h2 class="heading lv-2">結論</h2>
+<p class="paragraph"><code class="code">input(type=file)</code>でファイルを選択した場合は
+ファイルのへの参照を持っているだけであり、
+選択後にファイルを更新・削除を行うと選択したファイルへ反映される。</p>
+<p class="paragraph">ただし、反映のされ方はブラウザごとに挙動が異なる。</p>
+<h2 class="heading lv-2">あとがき</h2>
+<p class="paragraph">正直ファイルの参照を持っているだけだとは思っていませんでした。
+改めて考えてみると、コピーなんてしていたら容量も時間もかかるのでありえないんですが・・・ｗ</p>
+<p class="paragraph">でもまあ調査した結果としてはとても面白い内容となったので満足感ありです！
+まだIEの細かな仕様やスマホだとどうなのかなど色々気になることもあるので
+時間ができたら記事を更新していきます！</p>
+<h5 class="heading lv-5">追記　</h5>
+<p class="paragraph">2018/12/25時点での検証結果になるため、ブラウザの更新により挙動が変更される可能性があります。</p>
+<hr>
+<p class="paragraph">おしまい</p></div></article></main></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"post":"{\"slug\":\"html_input_tag_implements\",\"title\":\"HTMLのinputタグ[type=file]のブラウザごとの挙動について調べてみた\",\"publishedAt\":\"2018-12-24T23:44:11.000Z\",\"description\":\"input[type=file]でファイル選択後にファイルを消した場合の動作などを各ブラウザの実装を確かめてみました。\",\"tags\":[\"HTML\"]}","content":"\u003ch2 class=\"heading lv-2\"\u003eはじめに\u003c/h2\u003e\n\u003cp class=\"paragraph\"\u003eみなさんHTMLタグの一つである\u003ccode class=\"code\"\u003einput\u003c/code\u003eタグはご存知だと思います。\nその中でも\u003ca href=\"http://www.htmq.com/html/input_file.shtml\" class=\"anchor\" rel=\"noopener noreferrer\" target=\"_blank\"\u003etype=\"file\"\u003c/a\u003eについてぼくはこんな疑問を持ちました。\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003e\u003cstrong\u003e選択したファイルはどこのファイル？コピーとかされているの？\u003c/strong\u003e\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003eこれみなさん知っていますか？\nちょこっと調べたんですがなかなか情報がなかったので\nいろいろ自分で調査してみました。\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003e（本音は調査が面白そうだったのでそんなに本気で調べてないだけです\u003c/p\u003e\n\u003ch2 class=\"heading lv-2\"\u003e仮説を立てる\u003c/h2\u003e\n\u003cp class=\"paragraph\"\u003eまずは仮説をいくつか立ててそれぞれを検証していきます\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003eA. ブラウザはファイル参照だけ持っている\nB. ファイル選択時にTemp領域へコピーしている\nC. メモリ上に抱えている\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003eたぶんこれらのどれかじゃないかなと思っており、\n個人的にはBが濃厚だと勝手に考えています。\u003c/p\u003e\n\u003ch2 class=\"heading lv-2\"\u003e調査開始\u003c/h2\u003e\n\u003cp class=\"paragraph\"\u003eファイルアップロード機能が必要なので\n簡単にファイルをアップロードするだけのアプリを自前で作りました。\n\u003ca href=\"https://github.com/taqm/go-simple-fileup\" class=\"anchor\" rel=\"noopener noreferrer\" target=\"_blank\"\u003ehttps://github.com/taqm/go-simple-fileup\u003c/a\u003e\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003eこれは・・・雑の極みっ・・・！\n気にせずこれで検証を行っていきましょう\u003c/p\u003e\n\u003ch3 class=\"heading lv-3\"\u003eA. ブラウザはファイル参照だけ持っている 説\u003c/h3\u003e\n\u003cp class=\"paragraph\"\u003eまずはこちら検証していきましょう\u003c/p\u003e\n\u003ch4 class=\"heading lv-4\"\u003e説の内容\u003c/h4\u003e\n\u003cul class=\"list unordered\"\u003e\n\u003cli\u003eブラウザはアップロード対象ファイルへの参照だけを保持\u003c/li\u003e\n\u003cli\u003eファイルをアップロードする際は実際のファイルがそのまま送信される\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp class=\"paragraph\"\u003eこんなところでしょうか\u003c/p\u003e\n\u003ch4 class=\"heading lv-4\"\u003e検証内容\u003c/h4\u003e\n\u003cp class=\"paragraph\"\u003eもしブラウザがファイルへの参照を持っているだけならば、\nファイル選択後にファイルを更新したときに更新後のファイルが送信されるはず！\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003e作った検証用アプリを使って検証してみます\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003eまずは適当なテキストファイルを用意します。\u003c/p\u003e\n\u003cdiv class=\"has-filename\"\u003e\u003cdiv class=\"filename\"\u003esample.txt\u003c/div\u003e\u003cpre class=\"language-unknown pre\"\u003e\u003ccode class=\"language-unknown code\"\u003ehoge\u003c/code\u003e\u003c/pre\u003e\u003c/div\u003e\n\u003cp class=\"paragraph\"\u003eそしてこのファイルを選択後に更新してから送信してみます。\u003c/p\u003e\n\u003cdiv class=\"has-filename\"\u003e\u003cdiv class=\"filename\"\u003esample.txt（更新後\u003c/div\u003e\u003cpre class=\"language-unknown pre\"\u003e\u003ccode class=\"language-unknown code\"\u003efuga\u003c/code\u003e\u003c/pre\u003e\u003c/div\u003e\n\u003ch4 class=\"heading lv-4\"\u003e結果\u003c/h4\u003e\n\u003cp class=\"paragraph\"\u003e送信されたファイルの中身は以下でした\u003c/p\u003e\n\u003cdiv class=\"has-filename\"\u003e\u003cdiv class=\"filename\"\u003esample.txt\u003c/div\u003e\u003cpre class=\"language-unknown pre\"\u003e\u003ccode class=\"language-unknown code\"\u003efuga\u003c/code\u003e\u003c/pre\u003e\u003c/div\u003e\n\u003cp class=\"paragraph\"\u003e更新されてる...\nあれー？\n一番ないと思っていた仮説だったのにいきなりヒット？\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003eでは更新だけでなくファイル選択後に、対象ファイルを削除してみましょう\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003eなんと！リクエストに失敗してしまいました。\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003eやはりただファイル参照を持っているだけで\n実際のファイルへの更新を行うと、選択しているファイルにも影響が起きるようです。\u003c/p\u003e\n\u003ch3 class=\"heading lv-3\"\u003eブラウザごとの挙動\u003c/h3\u003e\n\u003cp class=\"paragraph\"\u003eこういう問題はブラウザごとに違うのでは？という疑問が出てきます。\n先に述べた実証はChromeで行っていたため\n他のブラウザではどうなっているのか見てみましょう\u003c/p\u003e\n\u003ch4 class=\"heading lv-4\"\u003eSafari\u003c/h4\u003e\n\u003cp class=\"paragraph\"\u003e\u003cstrong\u003e選択後に、更新した場合\u003c/strong\u003e\nやはり送信されたファイルは更新後の内容になっていました。\nChromeと同じ動きです。\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003e\u003cstrong\u003e選択後に、削除した場合\u003c/strong\u003e\n削除後に送信した結果、\n同名の空ファイルが送信されてしまいました。\u003c/p\u003e\n\u003ch4 class=\"heading lv-4\"\u003eFirefox\u003c/h4\u003e\n\u003cp class=\"paragraph\"\u003e\u003cstrong\u003e選択後に、更新した場合\u003c/strong\u003e\n送信されたファイルは更新後の内容になっていました。\nChromeやSafariと同じ動きです。\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003e\u003cstrong\u003e選択後に、削除した場合\u003c/strong\u003e\nファイルの送信が行われませんでした。\nそもそもファイルが選択されていないような動きになっています。\u003c/p\u003e\n\u003ch4 class=\"heading lv-4\"\u003eMicrosoft Edge\u003c/h4\u003e\n\u003cp class=\"paragraph\"\u003e\u003cstrong\u003e選択後に、更新した場合\u003c/strong\u003e\nなんと同名の空ファイルが送信されてしまいました。\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003e\u003cstrong\u003e選択後に、削除した場合\u003c/strong\u003e\n削除の場合も、更新と同様に空ファイルが送信されています。\u003c/p\u003e\n\u003ch4 class=\"heading lv-4\"\u003eInternet Exproler 11\u003c/h4\u003e\n\u003cp class=\"paragraph\"\u003e\u003cstrong\u003e選択後に、更新した場合\u003c/strong\u003e\nChromeやSafari同様に更新後の内容が送信されました。\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003e\u003cstrong\u003e選択後に、削除した場合\u003c/strong\u003e\nなんと削除前のファイルが正常に送信されるではありませんか。\nそして\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003e選択　→　更新　→　削除　→　送信\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003eと操作を行った場合には更新されたファイルが送信されていました。\u003c/p\u003e\n\u003ch4 class=\"heading lv-4\"\u003eブラウザ別の挙動まとめ\u003c/h4\u003e\n\u003cp class=\"paragraph\"\u003eブラウザごとに送信されたファイルをまとめてみます。\u003c/p\u003e\n\u003ctable class=\"table\"\u003e\n\u003cthead class=\"thead\"\u003e\n\u003ctr class=\"tr\"\u003e\n\u003cth class=\"th\"\u003e　\u003c/th\u003e\n\u003cth class=\"th\"\u003e選択後に更新\u003c/th\u003e\n\u003cth class=\"th\"\u003e選択後に削除\u003c/th\u003e\n\u003c/tr\u003e\n\u003c/thead\u003e\n\u003ctbody class=\"tbody\"\u003e\n\u003ctr class=\"tr\"\u003e\n\u003ctd class=\"td\"\u003eChrome\u003c/td\u003e\n\u003ctd class=\"td\"\u003e更新後のファイル\u003c/td\u003e\n\u003ctd class=\"td\"\u003eエラー発生\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr class=\"tr\"\u003e\n\u003ctd class=\"td\"\u003eSafari\u003c/td\u003e\n\u003ctd class=\"td\"\u003e更新後のファイル\u003c/td\u003e\n\u003ctd class=\"td\"\u003e空ファイル\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr class=\"tr\"\u003e\n\u003ctd class=\"td\"\u003eFirefox\u003c/td\u003e\n\u003ctd class=\"td\"\u003e更新後のファイル\u003c/td\u003e\n\u003ctd class=\"td\"\u003e送信せず\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr class=\"tr\"\u003e\n\u003ctd class=\"td\"\u003eEdge\u003c/td\u003e\n\u003ctd class=\"td\"\u003e空ファイル\u003c/td\u003e\n\u003ctd class=\"td\"\u003e空ファイル\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr class=\"tr\"\u003e\n\u003ctd class=\"td\"\u003eIE11\u003c/td\u003e\n\u003ctd class=\"td\"\u003e更新後のファイル\u003c/td\u003e\n\u003ctd class=\"td\"\u003e削除前のファイル\u003c/td\u003e\n\u003c/tr\u003e\n\u003c/tbody\u003e\n\u003c/table\u003e\n\u003cp class=\"paragraph\"\u003eバラバラだ\u003c/p\u003e\n\u003ch2 class=\"heading lv-2\"\u003e結論\u003c/h2\u003e\n\u003cp class=\"paragraph\"\u003e\u003ccode class=\"code\"\u003einput(type=file)\u003c/code\u003eでファイルを選択した場合は\nファイルのへの参照を持っているだけであり、\n選択後にファイルを更新・削除を行うと選択したファイルへ反映される。\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003eただし、反映のされ方はブラウザごとに挙動が異なる。\u003c/p\u003e\n\u003ch2 class=\"heading lv-2\"\u003eあとがき\u003c/h2\u003e\n\u003cp class=\"paragraph\"\u003e正直ファイルの参照を持っているだけだとは思っていませんでした。\n改めて考えてみると、コピーなんてしていたら容量も時間もかかるのでありえないんですが・・・ｗ\u003c/p\u003e\n\u003cp class=\"paragraph\"\u003eでもまあ調査した結果としてはとても面白い内容となったので満足感ありです！\nまだIEの細かな仕様やスマホだとどうなのかなど色々気になることもあるので\n時間ができたら記事を更新していきます！\u003c/p\u003e\n\u003ch5 class=\"heading lv-5\"\u003e追記　\u003c/h5\u003e\n\u003cp class=\"paragraph\"\u003e2018/12/25時点での検証結果になるため、ブラウザの更新により挙動が変更される可能性があります。\u003c/p\u003e\n\u003chr\u003e\n\u003cp class=\"paragraph\"\u003eおしまい\u003c/p\u003e"},"__N_SSG":true},"page":"/posts/[slug]","query":{"slug":"html_input_tag_implements"},"buildId":"2TeC_BqFkmcRD1K9YUrqZ","nextExport":false,"isFallback":false,"gsp":true}</script><script nomodule="" src="/_next/static/chunks/polyfills-51ce6eb9ed73aacaf515.js"></script><script src="/_next/static/chunks/main-8741ed3c7ec57f378f59.js" async=""></script><script src="/_next/static/chunks/webpack-95c2b224bccf352ee870.js" async=""></script><script src="/_next/static/chunks/framework.daa7383ad2ab2e6757c1.js" async=""></script><script src="/_next/static/chunks/commons.286c5ad94e4334e87283.js" async=""></script><script src="/_next/static/chunks/pages/_app-62c4ae74494db6a57e9e.js" async=""></script><script src="/_next/static/chunks/79afb1f29f0e22fb2195c114356294f95861ebcc.293ad4049eec03f4e065.js" async=""></script><script src="/_next/static/chunks/2c3b9bffc7150b37a7b3810dfcf1c0b0fac2bd18.26412b03d1df03d45396.js" async=""></script><script src="/_next/static/chunks/pages/posts/%5Bslug%5D-d84c8237cab24ecd19e3.js" async=""></script><script src="/_next/static/2TeC_BqFkmcRD1K9YUrqZ/_buildManifest.js" async=""></script><script src="/_next/static/2TeC_BqFkmcRD1K9YUrqZ/_ssgManifest.js" async=""></script></body></html>
